@@ -1,0 +1,815 @@
+{
+  "sites": [
+    {
+      "id": "jebel_irhoud",
+      "name": "Jebel Irhoud",
+      "description": "Cave site with the oldest Homo sapiens skull",
+      "iconAssetId": "jebel_irhoud_site_icon",
+      "introText": "Welcome to Jebel Irhoud! This cave site holds one of the most important discoveries in human history - the oldest Homo sapiens skull ever found, dating back 300,000 years!",
+      "unlockStars": 0,
+      "completed": false,
+      "questions": [
+        {
+          "text": "Archaeologists study ancient human life and artifacts.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "That's right! Archaeologists are scientists who study how people lived long ago by examining objects and remains they left behind.",
+          "incorrectFeedback": "Actually, that's true! Archaeologists study ancient human life and the objects people left behind. Try again!"
+        },
+        {
+          "text": "Which tool do archaeologists use to carefully brush away dirt from artifacts?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "Paintbrush",
+              "imageAssetId": "tool_brush",
+              "isCorrect": true
+            },
+            {
+              "text": "Hammer",
+              "imageAssetId": "tool_hammer",
+              "isCorrect": false
+            },
+            {
+              "text": "Shovel",
+              "imageAssetId": "tool_shovel",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Excellent! Soft brushes help archaeologists gently clean artifacts without damaging them.",
+          "incorrectFeedback": "Not quite. Think about which tool would be gentle enough to clean delicate artifacts without breaking them. Try again!"
+        },
+        {
+          "text": "Archaeologists dig up dinosaur bones.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": false
+            },
+            {
+              "text": "False",
+              "isCorrect": true
+            }
+          ],
+          "correctFeedback": "Correct! That's a common misconception. Paleontologists study dinosaurs. Archaeologists study human history and culture.",
+          "incorrectFeedback": "Actually, that's false! Paleontologists study dinosaurs, not archaeologists. Archaeologists study human history. Try again!"
+        },
+        {
+          "text": "What important discovery was made at Jebel Irhoud?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "The oldest human skull",
+              "imageAssetId": "artifact_card_jebel_irhoud_skull",
+              "isCorrect": true
+            },
+            {
+              "text": "A dinosaur egg",
+              "imageAssetId": "wrong_answer_dinosaur_egg",
+              "isCorrect": false
+            },
+            {
+              "text": "A pirate treasure",
+              "imageAssetId": "wrong_answer_treasure_chest",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Amazing! The Jebel Irhoud skull is about 300,000 years old and changed what we know about human evolution!",
+          "incorrectFeedback": "Not quite. Remember, this site is famous for a very important human discovery. Try again!"
+        }
+      ],
+      "rewards": [
+        "jebel_irhoud_skull",
+        "stone_tool"
+      ]
+    },
+    {
+      "id": "volubilis",
+      "name": "Volubilis",
+      "description": "Magnificent Roman ruins",
+      "iconAssetId": "volubilis_site_icon",
+      "introText": "Welcome to Volubilis! These magnificent Roman ruins show us how people lived in Morocco nearly 2,000 years ago.",
+      "unlockStars": 4,
+      "completed": false,
+      "questions": [
+        {
+          "text": "An excavation is when archaeologists carefully dig to find artifacts.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Perfect! Excavation is the careful, scientific process of digging to uncover artifacts and learn about the past.",
+          "incorrectFeedback": "Actually, that's true! Excavation is the careful digging process archaeologists use. Try again!"
+        },
+        {
+          "text": "Which tool helps archaeologists measure and record exactly where artifacts are found?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "Measuring tape",
+              "imageAssetId": "tool_measuring_tape",
+              "isCorrect": true
+            },
+            {
+              "text": "Magnifying glass",
+              "imageAssetId": "tool_magnifying_glass",
+              "isCorrect": false
+            },
+            {
+              "text": "Hammer",
+              "imageAssetId": "tool_hammer",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Great job! Recording the exact location of artifacts is crucial - it helps archaeologists understand how people lived.",
+          "incorrectFeedback": "Not quite. Think about which tool would help measure distances and positions. Try again!"
+        },
+        {
+          "text": "Artifacts are only valuable if they're made of gold or jewels.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": false
+            },
+            {
+              "text": "False",
+              "isCorrect": true
+            }
+          ],
+          "correctFeedback": "Exactly! Every artifact teaches us something. A simple clay pot can tell us what people ate, how they cooked, and how they lived.",
+          "incorrectFeedback": "Actually, that's false! Every artifact is valuable for what it teaches us, not just expensive ones. Try again!"
+        },
+        {
+          "text": "What is this beautiful floor pattern called?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "Mosaic",
+              "imageAssetId": "artifact_card_roman_mosaic",
+              "isCorrect": true
+            },
+            {
+              "text": "Painting",
+              "isCorrect": false
+            },
+            {
+              "text": "Carpet",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Wonderful! Mosaics are pictures made from tiny colored stones. The Romans were famous for creating beautiful mosaics.",
+          "incorrectFeedback": "Not quite. This pattern is made from tiny colored stones arranged to create pictures. Try again!"
+        }
+      ],
+      "rewards": [
+        "roman_mosaic",
+        "oil_lamp"
+      ]
+    },
+    {
+      "id": "chellah",
+      "name": "Chellah",
+      "description": "Medieval necropolis with layers of history",
+      "iconAssetId": "chellah_site_icon",
+      "introText": "Welcome to Chellah! This site has layers of history - from Roman times to medieval Islamic civilization. Archaeologists love sites like this!",
+      "unlockStars": 8,
+      "completed": false,
+      "questions": [
+        {
+          "text": "What do we call an object made by humans long ago?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "Artifact",
+              "isCorrect": true
+            },
+            {
+              "text": "Rock",
+              "isCorrect": false
+            },
+            {
+              "text": "Fossil",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Perfect! An artifact is any object made or used by humans in the past. It could be a tool, jewelry, pottery, or even a building!",
+          "incorrectFeedback": "Not quite. Think about the special word we use for objects made by people in the past. Try again!"
+        },
+        {
+          "text": "Archaeologists only work in deserts and caves.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": false
+            },
+            {
+              "text": "False",
+              "isCorrect": true
+            }
+          ],
+          "correctFeedback": "Right! Archaeologists work everywhere - underwater, in cities, forests, and even in your own backyard. History is everywhere!",
+          "incorrectFeedback": "Actually, that's false! Archaeologists work in many different places, not just deserts and caves. Try again!"
+        },
+        {
+          "text": "Which tool helps archaeologists see tiny details on artifacts?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "Magnifying glass",
+              "imageAssetId": "tool_magnifying_glass",
+              "isCorrect": true
+            },
+            {
+              "text": "Shovel",
+              "imageAssetId": "tool_shovel",
+              "isCorrect": false
+            },
+            {
+              "text": "Hammer",
+              "imageAssetId": "tool_hammer",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Excellent! Magnifying glasses help archaeologists examine small details like tool marks or writing on artifacts.",
+          "incorrectFeedback": "Not quite. Think about which tool would help you see very small details up close. Try again!"
+        },
+        {
+          "text": "Morocco has important archaeological sites that teach us about human history.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Absolutely! Morocco is home to some of the world's most important archaeological discoveries, from the oldest human remains to beautiful ancient cities!",
+          "incorrectFeedback": "Actually, that's true! Morocco has many important archaeological sites. Try again!"
+        }
+      ],
+      "rewards": [
+        "ceramic_bowl",
+        "ancient_coin"
+      ]
+    },
+    {
+      "id": "tafoni",
+      "name": "Tafoni Rock Art",
+      "description": "Ancient rock art and engravings showing early human creativity",
+      "iconAssetId": "jebel_irhoud_site_icon",
+      "introText": "Welcome to Tafoni! Here you'll discover ancient rock art created by early humans. These engravings show us what animals lived here and what people hunted thousands of years ago!",
+      "unlockStars": 12,
+      "completed": false,
+      "questions": [
+        {
+          "text": "Rock art and engravings are examples of artifacts.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Correct! Rock art is a very important type of artifact. It shows us what early humans thought was important and how they expressed themselves.",
+          "incorrectFeedback": "Actually, that's true! Rock art is an artifact that tells us about early human creativity and beliefs. Try again!"
+        },
+        {
+          "text": "What can rock engravings tell us about ancient people?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "What animals they hunted",
+              "isCorrect": true
+            },
+            {
+              "text": "What they ate for breakfast",
+              "isCorrect": false
+            },
+            {
+              "text": "Their favorite colors",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Great! Rock art often shows animals that were important for hunting. This helps archaeologists understand the environment and what people's lives were like.",
+          "incorrectFeedback": "Not quite. Think about what animals appear in rock art and why they might be important to ancient people. Try again!"
+        },
+        {
+          "text": "Stratigraphy is the study of layers of rock and soil to understand the age of artifacts.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Perfect! Stratigraphy is a key technique. Older artifacts are usually found in deeper layers. By studying layers, archaeologists can figure out how old things are!",
+          "incorrectFeedback": "Actually, that's true! Stratigraphy helps archaeologists understand the age of artifacts by studying layers. Try again!"
+        },
+        {
+          "text": "What does 'context' mean in archaeology?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "Where and how an artifact is found",
+              "isCorrect": true
+            },
+            {
+              "text": "The color of an artifact",
+              "isCorrect": false
+            },
+            {
+              "text": "How heavy an artifact is",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Excellent! Context is super important. Knowing exactly where something was found helps archaeologists understand its meaning and age.",
+          "incorrectFeedback": "Not quite. Think about what information is important when finding an artifact. Try again!"
+        }
+      ],
+      "rewards": [
+        "rock_engraving",
+        "hunting_scene"
+      ]
+    },
+    {
+      "id": "lixus",
+      "name": "Lixus",
+      "description": "Ancient Phoenician and Roman port city",
+      "iconAssetId": "volubilis_site_icon",
+      "introText": "Welcome to Lixus! This ancient port city was one of the most important trading centers in North Africa. Merchants from all over the Mediterranean came here!",
+      "unlockStars": 16,
+      "completed": false,
+      "questions": [
+        {
+          "text": "Trade routes connected different ancient civilizations.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "That's right! Trade routes allowed people to exchange goods, ideas, and culture. Studying artifacts helps us understand these ancient trade networks.",
+          "incorrectFeedback": "Actually, that's true! Trade routes connected ancient civilizations and helped spread ideas and goods. Try again!"
+        },
+        {
+          "text": "What does 'Phoenician' refer to?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "An ancient seafaring people",
+              "isCorrect": true
+            },
+            {
+              "text": "A type of pottery",
+              "isCorrect": false
+            },
+            {
+              "text": "A Roman emperor",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Perfect! The Phoenicians were famous sailors and traders. They established trading posts all around the Mediterranean, including at Lixus!",
+          "incorrectFeedback": "Not quite. Think about ancient peoples who were known for sailing and trading. Try again!"
+        },
+        {
+          "text": "Archaeologists use pottery shards to understand ancient trade.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Correct! Pottery from different regions helps archaeologists trace trade routes. If we find Greek pottery in Morocco, we know they traded with each other!",
+          "incorrectFeedback": "Actually, that's true! Pottery helps archaeologists understand ancient trade networks. Try again!"
+        },
+        {
+          "text": "What is a 'shard'?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "A broken piece of pottery",
+              "isCorrect": true
+            },
+            {
+              "text": "A type of tool",
+              "isCorrect": false
+            },
+            {
+              "text": "An ancient coin",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Great! Pottery shards are very common artifacts. Even broken pieces tell us important information about how people lived and traded.",
+          "incorrectFeedback": "Not quite. Think about what happens when ancient pottery breaks. Try again!"
+        }
+      ],
+      "rewards": [
+        "phoenician_vessel",
+        "trade_weight"
+      ]
+    },
+    {
+      "id": "sabratha",
+      "name": "Sabratha",
+      "description": "Libyan Roman city with stunning theater ruins",
+      "iconAssetId": "chellah_site_icon",
+      "introText": "Welcome to Sabratha! Just across the border in Libya, this Roman city has one of the most beautiful theaters ever built. It shows the incredible engineering skills of the Romans!",
+      "unlockStars": 20,
+      "completed": false,
+      "questions": [
+        {
+          "text": "Archaeologists can learn about ancient entertainment from theater ruins.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Absolutely! Theaters tell us what people enjoyed watching. They also show us about Roman engineering and architecture!",
+          "incorrectFeedback": "Actually, that's true! Theater ruins teach us about ancient entertainment and culture. Try again!"
+        },
+        {
+          "text": "What does 'architecture' mean?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "The design and construction of buildings",
+              "isCorrect": true
+            },
+            {
+              "text": "Ancient paintings",
+              "isCorrect": false
+            },
+            {
+              "text": "Old coins and jewelry",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Perfect! By studying ancient architecture, archaeologists learn how people built things and what materials they used.",
+          "incorrectFeedback": "Not quite. Think about the design and structure of buildings. Try again!"
+        },
+        {
+          "text": "The Romans built theaters only for entertainment.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": false
+            },
+            {
+              "text": "False",
+              "isCorrect": true
+            }
+          ],
+          "correctFeedback": "Right! Theaters were also important gathering places for the community. They showed the power and wealth of Roman cities.",
+          "incorrectFeedback": "Actually, that's false! Theaters were important for community and showed a city's importance. Try again!"
+        },
+        {
+          "text": "What can we learn from studying ancient ruins?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "How people lived, built, and organized society",
+              "isCorrect": true
+            },
+            {
+              "text": "What the weather was like",
+              "isCorrect": false
+            },
+            {
+              "text": "What people's favorite foods were",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Excellent! Ruins are like time capsules. They show us how ancient people organized their cities and what was important to them.",
+          "incorrectFeedback": "Not quite. Think about what large structures like theaters tell us about ancient society. Try again!"
+        }
+      ],
+      "rewards": [
+        "theater_fragment",
+        "roman_statue"
+      ]
+    },
+    {
+      "id": "timgad",
+      "name": "Timgad",
+      "description": "Roman military town with perfect grid layout",
+      "iconAssetId": "volubilis_site_icon",
+      "introText": "Welcome to Timgad! This Roman military town was built with perfect geometric planning. It shows how organized and disciplined the Roman army was!",
+      "unlockStars": 24,
+      "completed": false,
+      "questions": [
+        {
+          "text": "Roman cities were often built in a grid pattern.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Correct! The Romans loved order and planning. Grid layouts made cities easy to navigate and defend.",
+          "incorrectFeedback": "Actually, that's true! Roman cities often had organized grid patterns. Try again!"
+        },
+        {
+          "text": "What is 'urban planning'?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "Designing how a city is organized and built",
+              "isCorrect": true
+            },
+            {
+              "text": "Decorating buildings",
+              "isCorrect": false
+            },
+            {
+              "text": "Making pottery",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Great! Urban planning shows us how ancient people thought about organizing communities. It reveals their values and priorities.",
+          "incorrectFeedback": "Not quite. Think about how cities are designed and organized. Try again!"
+        },
+        {
+          "text": "Timgad was built as a military settlement.",
+          "type": "true_false",
+          "answers": [
+            {
+              "text": "True",
+              "isCorrect": true
+            },
+            {
+              "text": "False",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Perfect! Military towns had special designs to help soldiers defend the city. The grid pattern made it easier to organize troops.",
+          "incorrectFeedback": "Actually, that's true! Timgad was a military settlement with a planned layout. Try again!"
+        },
+        {
+          "text": "What can the layout of an ancient city tell archaeologists?",
+          "type": "multiple_choice",
+          "answers": [
+            {
+              "text": "What the people valued and how they organized society",
+              "isCorrect": true
+            },
+            {
+              "text": "What language they spoke",
+              "isCorrect": false
+            },
+            {
+              "text": "What music they listened to",
+              "isCorrect": false
+            }
+          ],
+          "correctFeedback": "Excellent! City layouts reveal priorities - where they put temples, markets, and defenses shows what mattered to them!",
+          "incorrectFeedback": "Not quite. Think about what the organization of a city reveals about its people. Try again!"
+        }
+      ],
+      "rewards": [
+        "military_insignia",
+        "city_plan_artifact"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "jebel_irhoud_skull",
+      "name": "Jebel Irhoud Skull",
+      "description": "The oldest known Homo sapiens skull, representing a groundbreaking discovery in understanding human evolution. This remarkable specimen shows that modern humans existed much earlier than previously thought, changing our understanding of human history forever.",
+      "location": "Jebel Irhoud cave site, Morocco",
+      "age": "Approximately 300,000 years old",
+      "imageAssetId": "artifact_card_jebel_irhoud_skull",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Institut National des Sciences de l'Archéologie et du Patrimoine (INSAP), Morocco. Published in Nature (2017). Housed in: Moroccan National Museum of Archaeology, Rabat.",
+      "historicalContext": "This skull revolutionized our understanding of human evolution. Before its discovery, scientists thought modern humans only appeared 200,000 years ago. The Jebel Irhoud skull proves Homo sapiens existed 100,000 years earlier than previously believed!",
+      "culturalSignificance": "This discovery shows that Africa, and specifically Morocco, is the birthplace of modern humanity. It demonstrates the incredible journey of human evolution and migration across the world.",
+      "museum": "Moroccan National Museum of Archaeology, Rabat"
+    },
+    {
+      "id": "stone_tool",
+      "name": "Ancient Stone Tool (Hand Axe)",
+      "description": "A carefully crafted hand axe made from flint, showing the remarkable skill of early humans in creating tools for survival. These tools were used for hunting, cutting, and processing food. The precision of the craftsmanship reveals the intelligence and planning abilities of our ancestors.",
+      "location": "Jebel Irhoud, Morocco",
+      "age": "Approximately 300,000 years old",
+      "imageAssetId": "artifact_card_stone_tool",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Multiple archaeological expeditions and museums. Stone tools from Jebel Irhoud are held in the Moroccan National Museum of Archaeology.",
+      "historicalContext": "Hand axes are among the oldest tools made by humans. They were used for over a million years! The skill required to make these tools shows that early humans were intelligent problem-solvers.",
+      "culturalSignificance": "These tools represent the first technology - the beginning of human innovation. By studying tool-making techniques, archaeologists can understand how our ancestors thought and solved problems.",
+      "museum": "Moroccan National Museum of Archaeology, Rabat"
+    },
+    {
+      "id": "roman_mosaic",
+      "name": "Roman Mosaic Tile",
+      "description": "A beautiful fragment of a Roman floor mosaic featuring geometric patterns made from tiny colored stones. Mosaics were a luxury decoration in wealthy Roman homes and public buildings. This particular piece shows the artistic sophistication of Roman Morocco during the height of the empire.",
+      "location": "Volubilis, Morocco",
+      "age": "Approximately 2,000 years old (1st-3rd century CE)",
+      "imageAssetId": "artifact_card_roman_mosaic",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: UNESCO World Heritage Site. Volubilis is one of Morocco's most important archaeological sites. Mosaic fragments are preserved in the Volubilis Museum.",
+      "historicalContext": "Volubilis was a thriving Roman city in Mauretania Tingitana. The mosaics show the wealth and artistic skill of Roman craftspeople. Creating a mosaic required thousands of tiny stones carefully placed by hand!",
+      "culturalSignificance": "Mosaics tell us about Roman daily life, their beliefs, and their artistic values. The patterns and images often showed gods, animals, or scenes from daily life. This helps archaeologists understand what was important to Roman people.",
+      "museum": "Volubilis Museum, Meknes, Morocco"
+    },
+    {
+      "id": "oil_lamp",
+      "name": "Ancient Oil Lamp",
+      "description": "A terracotta oil lamp used by Romans for lighting their homes, decorated with relief patterns. These lamps burned olive oil and were essential for daily life. The decorative patterns often told stories or showed religious symbols important to Roman families.",
+      "location": "Volubilis, Morocco",
+      "age": "Approximately 2,000 years old (1st-3rd century CE)",
+      "imageAssetId": "artifact_card_oil_lamp",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Volubilis Archaeological Museum. Roman oil lamps from this period are well-documented and frequently found at Volubilis.",
+      "historicalContext": "Before electricity, oil lamps were the main source of light. Families would gather around them in the evening. The designs on lamps often showed the owner's wealth and taste.",
+      "culturalSignificance": "Oil lamps reveal how people lived their daily lives - when they worked, when they rested, and what they valued. The decorative patterns show religious beliefs and artistic preferences of the time.",
+      "museum": "Volubilis Museum, Meknes, Morocco"
+    },
+    {
+      "id": "ceramic_bowl",
+      "name": "Medieval Ceramic Bowl",
+      "description": "A beautifully glazed bowl with intricate Islamic geometric patterns and calligraphy in turquoise and gold. Islamic ceramics represent the artistic and cultural achievements of medieval Morocco. The geometric patterns and calligraphy reflect the mathematical precision and spiritual significance of Islamic art.",
+      "location": "Chellah, Morocco",
+      "age": "Approximately 700 years old (13th-14th century CE)",
+      "imageAssetId": "artifact_card_ceramic_bowl",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Moroccan Ministry of Culture and Islamic Art specialists. Chellah contains extensive remains from the Islamic period.",
+      "historicalContext": "During the Islamic period, Morocco was a center of art and learning. Ceramic makers developed sophisticated glazing techniques that created brilliant colors. This bowl shows the high level of craftsmanship in medieval Morocco.",
+      "culturalSignificance": "Islamic geometric patterns have deep mathematical and spiritual meaning. They represent infinity and the unity of creation. The calligraphy often contains verses from the Quran or poetry.",
+      "museum": "Chellah Museum, Rabat, Morocco"
+    },
+    {
+      "id": "ancient_coin",
+      "name": "Medieval Coin",
+      "description": "An ancient coin with Arabic script and geometric patterns, showing signs of age with green oxidation. Coins tell us about trade, rulers, and the economy of ancient times. The Arabic inscriptions on this coin identify the ruler and the mint where it was made, providing valuable historical information.",
+      "location": "Chellah, Morocco",
+      "age": "Approximately 700 years old (13th-14th century CE)",
+      "imageAssetId": "artifact_card_ancient_coin",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Numismatic experts and Moroccan archaeological authorities. Medieval Islamic coins from Chellah are well-documented.",
+      "historicalContext": "Coins were used for trade and showed the power of rulers. The inscriptions on coins tell us who was in charge and when the coin was made. By studying coins, archaeologists can track trade routes and economic activity.",
+      "culturalSignificance": "Coins are like tiny history books! They show us the faces of rulers, the symbols of their power, and the languages people spoke. Finding coins helps archaeologists understand how people bought and sold goods.",
+      "museum": "Chellah Museum, Rabat, Morocco"
+    },
+    {
+      "id": "rock_engraving",
+      "name": "Rock Engraving Fragment",
+      "description": "An ancient rock engraving showing hunting scenes and animals. These engravings were created by early humans to record important events and animals in their lives. The detailed carvings show remarkable artistic skill and observation of nature.",
+      "location": "Tafoni Rock Art Site, Morocco",
+      "age": "Approximately 5,000-10,000 years old",
+      "imageAssetId": "artifact_card_stone_tool",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Moroccan Ministry of Culture. Rock art sites in Morocco are protected UNESCO heritage sites.",
+      "historicalContext": "Rock art is one of humanity's earliest forms of expression. These engravings show what animals lived in Morocco thousands of years ago and what was important to early people.",
+      "culturalSignificance": "Rock art reveals the creativity and spiritual beliefs of early humans. Hunting scenes suggest that animals were central to survival and possibly to spiritual practices.",
+      "museum": "Various Moroccan museums and protected sites"
+    },
+    {
+      "id": "hunting_scene",
+      "name": "Hunting Scene Engraving",
+      "description": "A detailed rock engraving depicting hunters pursuing wild animals. This artifact provides insight into the hunting practices and daily life of ancient Moroccan peoples. The composition shows sophisticated understanding of movement and perspective.",
+      "location": "Tafoni Rock Art Site, Morocco",
+      "age": "Approximately 5,000-10,000 years old",
+      "imageAssetId": "artifact_card_stone_tool",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Rock art specialists and Moroccan cultural authorities.",
+      "historicalContext": "Hunting was essential for survival. These engravings show the animals available and the techniques used. They help archaeologists understand the environment and economy of ancient Morocco.",
+      "culturalSignificance": "Hunting scenes may have had spiritual significance beyond just recording daily activities. They might represent rituals or stories important to the community.",
+      "museum": "Protected archaeological sites in Morocco"
+    },
+    {
+      "id": "phoenician_vessel",
+      "name": "Phoenician Trading Vessel",
+      "description": "A reconstructed Phoenician ceramic vessel used for storing and transporting goods like wine, oil, and grain. These vessels are found throughout the Mediterranean and North Africa, showing the extensive trade networks of the Phoenicians.",
+      "location": "Lixus, Morocco",
+      "age": "Approximately 2,500 years old (8th-6th century BCE)",
+      "imageAssetId": "artifact_card_ceramic_bowl",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Lixus Archaeological Museum and Phoenician studies specialists.",
+      "historicalContext": "The Phoenicians were master traders who established trading posts across the Mediterranean. Lixus was one of their most important settlements in North Africa.",
+      "culturalSignificance": "Phoenician vessels show us the goods that were traded and the routes used. Finding these vessels in different locations helps archaeologists map ancient trade networks.",
+      "museum": "Lixus Archaeological Museum, Morocco"
+    },
+    {
+      "id": "trade_weight",
+      "name": "Ancient Trade Weight",
+      "description": "A bronze weight used by merchants to measure goods for trade. These standardized weights were essential for fair commerce in ancient times. The markings on this weight indicate its official value and origin.",
+      "location": "Lixus, Morocco",
+      "age": "Approximately 2,500 years old",
+      "imageAssetId": "artifact_card_ancient_coin",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Trade and commerce specialists in Mediterranean archaeology.",
+      "historicalContext": "Standardized weights were crucial for international trade. Different regions had different weight systems, so merchants needed to know the official weights.",
+      "culturalSignificance": "Trade weights show us how ancient people conducted business and ensured fairness. They represent the development of commerce and economic systems.",
+      "museum": "Lixus Archaeological Museum, Morocco"
+    },
+    {
+      "id": "theater_fragment",
+      "name": "Theater Architectural Fragment",
+      "description": "A carved stone fragment from the Sabratha theater showing decorative architectural details. This piece demonstrates the sophisticated engineering and artistic skills of Roman builders. The intricate carving shows the importance Romans placed on beauty and craftsmanship.",
+      "location": "Sabratha, Libya (North Africa)",
+      "age": "Approximately 1,900 years old (2nd century CE)",
+      "imageAssetId": "artifact_card_roman_mosaic",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: UNESCO World Heritage Site. Sabratha is one of the best-preserved Roman cities in North Africa.",
+      "historicalContext": "The Sabratha theater is one of the most beautiful Roman theaters ever built. It shows the wealth and cultural importance of the city.",
+      "culturalSignificance": "Theaters were centers of community life. They hosted plays, concerts, and public gatherings. The quality of construction shows how much Romans valued entertainment and culture.",
+      "museum": "Sabratha Archaeological Museum, Libya"
+    },
+    {
+      "id": "roman_statue",
+      "name": "Roman Marble Statue Fragment",
+      "description": "A fragment of a marble statue showing fine Roman sculptural technique. This piece likely represented a god, emperor, or important citizen. The quality of the marble and carving indicates this was a prestigious artwork.",
+      "location": "Sabratha, Libya",
+      "age": "Approximately 1,900 years old",
+      "imageAssetId": "artifact_card_oil_lamp",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Roman art specialists and Sabratha Museum.",
+      "historicalContext": "Roman statues served both religious and political purposes. They honored gods and showed the power of rulers and wealthy citizens.",
+      "culturalSignificance": "Statues reveal what Romans valued - beauty, power, and religious devotion. The style and subject matter tell us about Roman beliefs and society.",
+      "museum": "Sabratha Archaeological Museum, Libya"
+    },
+    {
+      "id": "military_insignia",
+      "name": "Roman Military Insignia",
+      "description": "A bronze military emblem showing Roman legion symbols and eagles. These insignias identified military units and showed rank and authority. They were worn on uniforms and displayed on standards.",
+      "location": "Timgad, Algeria",
+      "age": "Approximately 1,900 years old (2nd century CE)",
+      "imageAssetId": "artifact_card_ancient_coin",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Roman military archaeology specialists and Timgad Museum.",
+      "historicalContext": "Timgad was built as a military settlement for Roman soldiers. The insignias show the organization and hierarchy of the Roman army.",
+      "culturalSignificance": "Military insignias reveal how the Roman army was organized and how soldiers identified with their units. They show the importance of military discipline and order.",
+      "museum": "Timgad Archaeological Museum, Algeria"
+    },
+    {
+      "id": "city_plan_artifact",
+      "name": "City Planning Stone",
+      "description": "A stone artifact showing the planned grid layout of Timgad. This demonstrates the Roman approach to urban planning and military organization. The precise geometric design shows Roman engineering expertise.",
+      "location": "Timgad, Algeria",
+      "age": "Approximately 1,900 years old",
+      "imageAssetId": "artifact_card_roman_mosaic",
+      "authentic": true,
+      "authenticityInfo": "✓ Verified by: Urban archaeology and Roman planning specialists.",
+      "historicalContext": "Timgad was built with perfect geometric planning. The grid layout made the city easy to defend and organize. It shows Roman military precision applied to city building.",
+      "culturalSignificance": "City planning reveals how Romans thought about organizing society. The grid pattern shows their values of order, efficiency, and control.",
+      "museum": "Timgad Archaeological Museum, Algeria"
+    }
+  ],
+  "settings": {
+    "attemptsPerQuestion": 2,
+    "musicEnabled": true,
+    "colorScheme": "warm"
+  }
+}

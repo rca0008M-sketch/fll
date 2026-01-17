@@ -1,27 +1,2644 @@
-<!-- Load game files -->
-<script src="../config/config.json"></script>
-<script>
-  // Parse config if it's a string
-  if (typeof gameConfig === 'string') {
-    window.gameConfig = JSON.parse(gameConfig);
-  }
-</script>
-<script src="../lib/lib.js"></script>
-<script src="../asset_map/asset_map.js"></script>
-<script>
-  // Initialize lib with assets
-  if (typeof lib === 'undefined') {
-    window.lib = {
-      getAsset: function(id) {
-        return assets[id];
-      },
-      log: function(msg) {
-        console.log(msg);
-      },
-      editMenu: {
-        open: function() {}
-      },
-      showGameParameters: function() {}
-    };
-  }
-</script>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Artifact Quest: Moroccan Explorer</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-select=none"
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>/* ============================================
+                 CSS RESET & BASE STYLES
+                 ============================================ */
+
+* {
+                  margin: 0;
+                  padding: 0;
+                  box-sizing: border-box;
+                  -webkit-tap-highlight-color: transparent;
+              }
+
+body, html {
+                  width: 100%;
+                  height: 100%;
+                  overflow: hidden;
+                  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+                  background: #2c3e50;
+                  color: #2c3e50;
+              }
+
+/* ============================================
+                 CSS CUSTOM PROPERTIES
+                 ============================================ */
+
+:root {
+                  /* Colors */
+                  --color-primary: #E67E22;
+                  --color-primary-hover: #D35400;
+                  --color-secondary: #3498DB;
+                  --color-secondary-hover: #2980B9;
+                  --color-success: #27AE60;
+                  --color-error: #E74C3C;
+                  --color-warning: #F39C12;
+                  --color-gold: #F1C40F;
+
+                  --color-bg-dark: #2C3E50;
+                  --color-surface: #FFFFFF;
+                  --color-text-primary: #2C3E50;
+                  --color-text-secondary: #7F8C8D;
+                  --color-text-on-dark: #FFFFFF;
+                  --color-disabled: #95A5A6;
+
+                  /* Spacing (8px grid) */
+                  --space-xs: 8px;
+                  --space-sm: 16px;
+                  --space-md: 24px;
+                  --space-lg: 32px;
+                  --space-xl: 48px;
+
+                  /* Animation Timings */
+                  --transition-fast: 150ms;
+                  --transition-normal: 300ms;
+                  --transition-slow: 500ms;
+
+                  /* Easing Functions */
+                  --ease-out: cubic-bezier(0.0, 0, 0.2, 1);
+                  --ease-bounce: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+
+                  /* Shadows */
+                  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+                  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+                  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
+                  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.4);
+
+                  /* Glows */
+                  --glow-gold: 0 0 20px rgba(241, 196, 15, 0.6);
+                  --glow-success: 0 0 20px rgba(39, 174, 96, 0.4);
+              }
+
+/* ============================================
+                 GAME CONTAINER & SCREEN SYSTEM
+                 ============================================ */
+
+#game-container {
+                  width: 100%;
+                  height: 100%;
+                  position: relative;
+                  overflow: hidden;
+              }
+
+.screen {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  display: none;
+                  flex-direction: column;
+                  opacity: 0;
+                  transition: opacity var(--transition-normal) var(--ease-out);
+              }
+
+.screen.active {
+                  display: flex;
+                  opacity: 1;
+              }
+
+.background {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  z-index: 0;
+              }
+
+.content {
+                  position: relative;
+                  z-index: 1;
+                  width: 100%;
+                  height: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  padding: var(--space-sm);
+                  padding-bottom: 96px; /* Space for bottom nav */
+              }
+
+/* ============================================
+                 BOTTOM NAVIGATION BAR (THUMB ZONE)
+                 ============================================ */
+
+.bottom-nav {
+                  position: fixed;
+                  bottom: 0;
+                  left: 0;
+                  right: 0;
+                  height: 80px;
+                  background: rgba(44, 62, 80, 0.95);
+                  backdrop-filter: blur(10px);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  padding: var(--space-sm);
+                  z-index: 100;
+                  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.3);
+                  transform: translateY(100%);
+                  transition: transform var(--transition-normal) var(--ease-out);
+              }
+
+.bottom-nav.visible {
+                  transform: translateY(0);
+              }
+
+.nav-button {
+                  background: rgba(255, 255, 255, 0.15);
+                  color: var(--color-text-on-dark);
+                  border: 2px solid rgba(255, 255, 255, 0.3);
+                  border-radius: 16px;
+                  padding: var(--space-sm) var(--space-md);
+                  font-size: 18px;
+                  font-weight: 600;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  gap: var(--space-xs);
+                  transition: all var(--transition-fast) var(--ease-out);
+                  min-height: 56px;
+                  min-width: 120px;
+                  justify-content: center;
+              }
+
+.nav-button:active {
+                  transform: scale(0.95);
+                  background: rgba(255, 255, 255, 0.25);
+              }
+
+.nav-button-icon {
+                  font-size: 24px;
+              }
+
+/* ============================================
+                 MAIN MENU
+                 ============================================ */
+
+.title {
+                  font-family: "Fredoka", "Poppins", sans-serif;
+                  font-size: 56px;
+                  font-weight: 700;
+                  color: var(--color-text-on-dark);
+                  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.6);
+                  margin-top: 80px;
+                  margin-bottom: var(--space-xl);
+                  text-align: center;
+                  line-height: 1.1;
+                  letter-spacing: -0.5px;
+              }
+
+.menu-buttons {
+                  display: flex;
+                  flex-direction: column;
+                  gap: var(--space-sm);
+                  width: 100%;
+                  max-width: 400px;
+                  margin-top: auto;
+                  margin-bottom: var(--space-xl);
+              }
+
+.button {
+                  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-hover) 100%);
+                  color: white;
+                  border: 4px solid white;
+                  border-radius: 20px;
+                  padding: 20px var(--space-lg);
+                  font-size: 22px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  text-align: center;
+                  box-shadow: var(--shadow-lg);
+                  transition: all var(--transition-fast) var(--ease-out);
+                  user-select: none;
+                  min-height: 96px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  font-family: "Poppins", sans-serif;
+              }
+
+.button:active {
+                  transform: scale(0.97);
+                  box-shadow: var(--shadow-md);
+              }
+
+.button.secondary {
+                  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-hover) 100%);
+              }
+
+.button.disabled {
+                  background: var(--color-disabled);
+                  cursor: not-allowed;
+                  opacity: 0.6;
+                  border-color: rgba(255, 255, 255, 0.5);
+              }
+
+.button.disabled:active {
+                  transform: none;
+              }
+
+/* ============================================
+                 ROADMAP
+                 ============================================ */
+
+.roadmap-content {
+                  width: 100%;
+                  height: 100%;
+                  position: relative;
+                  overflow-y: auto;
+                  overflow-x: hidden;
+                  padding: var(--space-md) var(--space-sm);
+                  padding-bottom: 120px;
+              }
+
+.roadmap-title {
+                  font-family: "Fredoka", sans-serif;
+                  font-size: 32px;
+                  font-weight: 700;
+                  color: var(--color-text-on-dark);
+                  text-align: center;
+                  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+                  margin-bottom: var(--space-md);
+                  padding: var(--space-sm);
+              }
+
+.site-marker {
+                  position: relative;
+                  width: 100%;
+                  max-width: 320px;
+                  margin: 0 auto var(--space-xl);
+                  cursor: pointer;
+                  transition: transform var(--transition-fast) var(--ease-out);
+              }
+
+.site-marker:active {
+                  transform: scale(0.97);
+              }
+
+.site-icon-container {
+                  width: 140px;
+                  height: 140px;
+                  position: relative;
+                  margin: 0 auto;
+              }
+
+.site-icon {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: cover;
+                  border-radius: 50%;
+                  border: 5px solid white;
+                  box-shadow: var(--shadow-lg);
+                  transition: all var(--transition-normal) var(--ease-out);
+              }
+
+.site-marker:active .site-icon {
+                  transform: scale(0.95);
+              }
+
+.site-marker.locked .site-icon {
+                  filter: grayscale(100%) brightness(0.4);
+              }
+
+.site-name {
+                  text-align: center;
+                  font-size: 24px;
+                  font-weight: 700;
+                  color: var(--color-text-on-dark);
+                  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
+                  margin-top: var(--space-sm);
+                  font-family: "Fredoka", sans-serif;
+              }
+
+.site-stars {
+                  text-align: center;
+                  margin-top: var(--space-xs);
+                  font-size: 20px;
+                  font-weight: 600;
+                  color: var(--color-gold);
+                  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: var(--space-xs);
+              }
+
+.lock-overlay {
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  width: 64px;
+                  height: 64px;
+                  pointer-events: none;
+              }
+
+.lock-icon {
+                  width: 100%;
+                  height: 100%;
+                  object-fit: contain;
+                  filter: drop-shadow(2px 2px 6px rgba(0, 0, 0, 0.8));
+              }
+
+.unlock-requirement {
+                  text-align: center;
+                  font-size: 16px;
+                  font-weight: 600;
+                  color: var(--color-text-on-dark);
+                  background: rgba(0, 0, 0, 0.7);
+                  padding: var(--space-xs) var(--space-sm);
+                  border-radius: 20px;
+                  margin-top: var(--space-sm);
+                  border: 2px solid rgba(255, 255, 255, 0.3);
+              }
+
+/* ============================================
+                 SITE INTRODUCTION
+                 ============================================ */
+
+.intro-content {
+                  max-width: 560px;
+                  background: rgba(255, 255, 255, 0.98);
+                  border-radius: 24px;
+                  padding: var(--space-lg);
+                  text-align: center;
+                  box-shadow: var(--shadow-xl);
+                  margin: auto;
+              }
+
+.intro-icon {
+                  width: 160px;
+                  height: 160px;
+                  object-fit: cover;
+                  margin: 0 auto var(--space-md);
+                  border-radius: 50%;
+                  border: 4px solid var(--color-primary);
+                  box-shadow: var(--shadow-md);
+              }
+
+.intro-title {
+                  font-family: "Fredoka", sans-serif;
+                  font-size: 32px;
+                  font-weight: 700;
+                  color: var(--color-text-primary);
+                  margin-bottom: var(--space-sm);
+              }
+
+.intro-text {
+                  font-size: 18px;
+                  color: var(--color-text-primary);
+                  line-height: 1.6;
+                  margin-bottom: var(--space-md);
+              }
+
+/* ============================================
+                 QUESTION SCREEN
+                 ============================================ */
+
+.question-content {
+                  width: 100%;
+                  max-width: 600px;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  margin: auto 0;
+              }
+
+.progress-bar {
+                  width: 100%;
+                  display: flex;
+                  justify-content: center;
+                  gap: var(--space-sm);
+                  margin-bottom: var(--space-md);
+              }
+
+.progress-star {
+                  width: 64px;
+                  height: 64px;
+                  object-fit: contain;
+                  opacity: 0.3;
+                  transition: all var(--transition-normal) var(--ease-out);
+                  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
+              }
+
+.progress-star.earned {
+                  opacity: 1;
+                  animation: starEarn 0.6s var(--ease-bounce);
+                  filter: drop-shadow(0 0 8px rgba(241, 196, 15, 0.8));
+              }
+
+@keyframes starEarn {
+                  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+                  50% { transform: scale(1.3) rotate(180deg); }
+                  100% { transform: scale(1) rotate(360deg); opacity: 1; }
+              }
+
+.question-box {
+                  background: rgba(255, 255, 255, 0.98);
+                  border-radius: 24px;
+                  padding: var(--space-md);
+                  margin-bottom: var(--space-md);
+                  box-shadow: var(--shadow-lg);
+                  width: 100%;
+              }
+
+.question-text {
+                  font-size: 22px;
+                  font-weight: 600;
+                  color: var(--color-text-primary);
+                  text-align: center;
+                  line-height: 1.5;
+              }
+
+.answers-container {
+                  width: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  gap: var(--space-sm);
+              }
+
+.answer-button {
+                  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-hover) 100%);
+                  color: white;
+                  border: 4px solid white;
+                  border-radius: 20px;
+                  padding: var(--space-sm) var(--space-md);
+                  font-size: 20px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  box-shadow: var(--shadow-md);
+                  transition: all var(--transition-fast) var(--ease-out);
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: var(--space-sm);
+                  min-height: 96px;
+                  font-family: "Poppins", sans-serif;
+              }
+
+.answer-button:active {
+                  transform: scale(0.97);
+                  box-shadow: var(--shadow-sm);
+              }
+
+.answer-image {
+                  width: 72px;
+                  height: 72px;
+                  object-fit: contain;
+                  border-radius: 12px;
+                  background: white;
+                  padding: 4px;
+              }
+
+/* ============================================
+                 FEEDBACK SCREEN
+                 ============================================ */
+
+.feedback-content {
+                  max-width: 560px;
+                  background: rgba(255, 255, 255, 0.98);
+                  border-radius: 24px;
+                  padding: var(--space-lg);
+                  text-align: center;
+                  box-shadow: var(--shadow-xl);
+                  position: relative;
+                  margin: auto;
+              }
+
+.celebration-overlay {
+                  position: absolute;
+                  top: -80px;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  width: 200px;
+                  height: 200px;
+                  object-fit: contain;
+                  pointer-events: none;
+                  animation: celebrationFloat 0.8s var(--ease-bounce);
+              }
+
+@keyframes celebrationFloat {
+                  0% {
+                      transform: translateX(-50%) scale(0) rotate(0deg);
+                      opacity: 0;
+                  }
+                  60% {
+                      opacity: 1;
+                  }
+                  100% {
+                      transform: translateX(-50%) scale(1) rotate(360deg);
+                      opacity: 1;
+                  }
+              }
+
+.feedback-icon {
+                  width: 120px;
+                  height: 120px;
+                  object-fit: contain;
+                  margin: 0 auto var(--space-sm);
+              }
+
+.feedback-title {
+                  font-family: "Fredoka", sans-serif;
+                  font-size: 48px;
+                  font-weight: 700;
+                  margin-bottom: var(--space-sm);
+              }
+
+.feedback-title.correct {
+                  color: var(--color-success);
+                  text-shadow: var(--glow-success);
+              }
+
+.feedback-title.incorrect {
+                  color: var(--color-error);
+              }
+
+.feedback-text {
+                  font-size: 18px;
+                  color: var(--color-text-primary);
+                  line-height: 1.6;
+                  margin-bottom: var(--space-md);
+              }
+
+/* ============================================
+                 SITE COMPLETION
+                 ============================================ */
+
+.completion-content {
+                  max-width: 560px;
+                  background: rgba(255, 255, 255, 0.98);
+                  border-radius: 24px;
+                  padding: var(--space-lg);
+                  text-align: center;
+                  box-shadow: var(--shadow-xl);
+                  margin: auto;
+              }
+
+.completion-title {
+                  font-family: "Fredoka", sans-serif;
+                  font-size: 42px;
+                  font-weight: 700;
+                  color: var(--color-success);
+                  margin-bottom: var(--space-sm);
+                  text-shadow: var(--glow-success);
+              }
+
+.completion-text {
+                  font-size: 18px;
+                  color: var(--color-text-primary);
+                  margin-bottom: var(--space-md);
+                  line-height: 1.5;
+              }
+
+.artifact-rewards {
+                  display: flex;
+                  gap: var(--space-sm);
+                  justify-content: center;
+                  margin-bottom: var(--space-md);
+                  flex-wrap: wrap;
+              }
+
+.artifact-preview {
+                  width: 120px;
+                  height: 120px;
+                  object-fit: contain;
+                  border: 4px solid var(--color-warning);
+                  border-radius: 16px;
+                  background: white;
+                  padding: var(--space-xs);
+                  box-shadow: var(--shadow-md);
+                  animation: artifactAppear 0.5s var(--ease-bounce);
+              }
+
+@keyframes artifactAppear {
+                  0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+                  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+              }
+
+/* ============================================
+                 COLLECTION BOOK
+                 ============================================ */
+
+.collection-content {
+                  width: 100%;
+                  height: 100%;
+                  display: flex;
+                  flex-direction: column;
+                  padding: var(--space-sm);
+                  padding-bottom: 96px;
+              }
+
+.collection-title {
+                  font-family: "Fredoka", sans-serif;
+                  font-size: 32px;
+                  font-weight: 700;
+                  color: var(--color-text-on-dark);
+                  text-align: center;
+                  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+                  margin-bottom: var(--space-md);
+                  padding: var(--space-sm);
+              }
+
+.collection-grid { flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--space-sm); overflow-y: auto; padding: var(--space-xs); width: 100%; align-content: start; }
+
+.artifact-card {
+                  background: white;
+                  border-radius: 16px;
+                  padding: var(--space-sm);
+                  box-shadow: var(--shadow-md);
+                  cursor: pointer;
+                  transition: all var(--transition-fast) var(--ease-out);
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: flex-start;
+                  min-height: 200px;
+                  border: 3px solid transparent;
+                  position: relative;
+                  z-index: 1;
+                  visibility: visible;
+                  opacity: 1;
+              }
+
+.artifact-card:active {
+                  transform: scale(0.97);
+                  box-shadow: var(--shadow-sm);
+              }
+
+.artifact-card:not(.locked):hover {
+                  border-color: var(--color-primary);
+                  box-shadow: var(--shadow-lg);
+              }
+
+.artifact-card.locked {
+                  background: #E8E8E8;
+                  cursor: default;
+              }
+
+.artifact-card.locked:active {
+                  transform: none;
+              }
+
+.artifact-card-image { width: 110px; height: 110px; object-fit: contain; margin-bottom: var(--space-xs); display: block; visibility: visible; }
+
+.artifact-card.locked .artifact-card-image {
+                  filter: brightness(0.3);
+              }
+
+.artifact-card-name {
+                  font-size: 14px;
+                  font-weight: 600;
+                  color: var(--color-text-primary);
+                  text-align: center;
+                  line-height: 1.3;
+                  display: block;
+                  visibility: visible;
+                  word-wrap: break-word;
+                  overflow-wrap: break-word;
+              }
+
+.artifact-card.locked .artifact-card-name {
+                  color: var(--color-text-secondary);
+              }
+
+/* ============================================
+                 MODALS & OVERLAYS
+                 ============================================ */
+
+.modal-overlay {
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: rgba(0, 0, 0, 0.85);
+                  backdrop-filter: blur(4px);
+                  display: none;
+                  align-items: center;
+                  justify-content: center;
+                  z-index: 1000;
+                  padding: var(--space-md);
+                  opacity: 0;
+                  transition: opacity var(--transition-normal) var(--ease-out);
+              }
+
+.modal-overlay.active {
+                  display: flex;
+                  opacity: 1;
+              }
+
+.modal-content {
+                  background: white;
+                  border-radius: 24px;
+                  padding: var(--space-lg);
+                  max-width: 90%;
+                  width: 100%;
+                  max-height: 90vh;
+                  overflow-y: auto;
+                  box-shadow: var(--shadow-xl);
+                  transform: scale(0.9);
+                  transition: transform var(--transition-normal) var(--ease-bounce);
+              }
+
+.modal-overlay.active .modal-content {
+                  transform: scale(1);
+              }
+
+.modal-artifact-image {
+                  width: 180px;
+                  height: 180px;
+                  object-fit: contain;
+                  margin: 0 auto var(--space-md);
+                  display: block;
+                  border: 3px solid var(--color-warning);
+                  border-radius: 16px;
+                  padding: var(--space-xs);
+                  background: #F8F8F8;
+              }
+
+.modal-artifact-name {
+                  font-family: "Fredoka", sans-serif;
+                  font-size: 26px;
+                  font-weight: 700;
+                  color: var(--color-text-primary);
+                  text-align: center;
+                  margin-bottom: var(--space-xs);
+              }
+
+.modal-artifact-authenticity {
+                  text-align: center;
+                  margin-bottom: var(--space-md);
+                  padding: var(--space-xs) var(--space-sm);
+                  border-radius: 12px;
+                  font-weight: 700;
+                  font-size: 14px;
+                  display: inline-block;
+                  width: 100%;
+              }
+
+.modal-artifact-authenticity.authentic {
+                  background: rgba(39, 174, 96, 0.2);
+                  color: var(--color-success);
+                  border: 2px solid var(--color-success);
+              }
+
+.modal-artifact-authenticity.authentic::before {
+                  content: "✓ ";
+              }
+
+.modal-artifact-info {
+                  font-size: 15px;
+                  color: var(--color-text-primary);
+                  line-height: 1.6;
+                  margin-bottom: var(--space-sm);
+                  padding: var(--space-xs) 0;
+                  word-wrap: break-word;
+                  white-space: normal;
+              }
+
+.modal-artifact-info strong {
+                  color: var(--color-primary);
+                  display: block;
+                  margin-top: var(--space-sm);
+                  margin-bottom: var(--space-xs);
+                  font-size: 16px;
+              }
+
+.modal-artifact-info br {
+                  display: block;
+                  content: "";
+                  margin: 4px 0;
+              }
+
+.modal-close {
+                  background: var(--color-error);
+                  color: white;
+                  border: none;
+                  border-radius: 16px;
+                  padding: var(--space-sm) var(--space-md);
+                  font-size: 18px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  margin-top: var(--space-sm);
+                  width: 100%;
+                  min-height: 56px;
+                  box-shadow: var(--shadow-sm);
+                  transition: all var(--transition-fast) var(--ease-out);
+                  font-family: "Poppins", sans-serif;
+              }
+
+.modal-close:active {
+                  transform: scale(0.97);
+              }
+
+/* How to Play Overlay */
+
+.overlay {
+                  position: fixed;
+                  top: 0;
+                  left: 0;
+                  width: 100%;
+                  height: 100%;
+                  background: rgba(0, 0, 0, 0.85);
+                  backdrop-filter: blur(4px);
+                  display: none;
+                  align-items: center;
+                  justify-content: center;
+                  z-index: 999;
+                  padding: var(--space-md);
+                  opacity: 0;
+                  transition: opacity var(--transition-normal) var(--ease-out);
+              }
+
+.overlay.active {
+                  display: flex;
+                  opacity: 1;
+              }
+
+.overlay-content {
+                  background: white;
+                  border-radius: 24px;
+                  padding: var(--space-lg);
+                  max-width: 500px;
+                  max-height: 85%;
+                  overflow-y: auto;
+                  box-shadow: var(--shadow-xl);
+                  transform: scale(0.9);
+                  transition: transform var(--transition-normal) var(--ease-bounce);
+              }
+
+.overlay.active .overlay-content {
+                  transform: scale(1);
+              }
+
+.overlay-title {
+                  font-family: "Fredoka", sans-serif;
+                  font-size: 32px;
+                  font-weight: 700;
+                  color: var(--color-text-primary);
+                  text-align: center;
+                  margin-bottom: var(--space-md);
+              }
+
+.overlay-text {
+                  font-size: 16px;
+                  color: var(--color-text-primary);
+                  line-height: 1.6;
+                  margin-bottom: var(--space-sm);
+              }
+
+.overlay-close {
+                  background: var(--color-secondary);
+                  color: white;
+                  border: none;
+                  border-radius: 16px;
+                  padding: var(--space-sm) var(--space-md);
+                  font-size: 18px;
+                  font-weight: 700;
+                  cursor: pointer;
+                  margin-top: var(--space-sm);
+                  width: 100%;
+                  min-height: 56px;
+                  box-shadow: var(--shadow-sm);
+                  transition: all var(--transition-fast) var(--ease-out);
+                  font-family: "Poppins", sans-serif;
+              }
+
+.overlay-close:active {
+                  transform: scale(0.97);
+              }
+
+/* ============================================
+                 EDIT MODE INDICATOR
+                 ============================================ */
+
+.edit-indicator {
+                  position: fixed;
+                  top: var(--space-sm);
+                  right: var(--space-sm);
+                  background: #9B59B6;
+                  color: white;
+                  padding: var(--space-xs) var(--space-sm);
+                  border-radius: 20px;
+                  font-size: 14px;
+                  font-weight: 700;
+                  z-index: 1001;
+                  display: none;
+                  box-shadow: var(--shadow-md);
+              }
+
+.edit-indicator.active {
+                  display: block;
+              }
+
+/* ============================================
+                 ANIMATIONS & MOTION
+                 ============================================ */
+
+@media (prefers-reduced-motion: no-preference) {
+                  .site-marker {
+                      animation: fadeInUp 0.4s var(--ease-out) backwards;
+                  }
+
+                  .site-marker:nth-child(1) { animation-delay: 0.1s; }
+                  .site-marker:nth-child(2) { animation-delay: 0.2s; }
+                  .site-marker:nth-child(3) { animation-delay: 0.3s; }
+
+                  @keyframes fadeInUp {
+                      from {
+                          opacity: 0;
+                          transform: translateY(20px);
+                      }
+                      to {
+                          opacity: 1;
+                          transform: translateY(0);
+                      }
+                  }
+
+                  .artifact-card {
+                      animation: fadeInScale 0.3s var(--ease-out) backwards;
+                  }
+
+                  .artifact-card:nth-child(1) { animation-delay: 0.05s; }
+                  .artifact-card:nth-child(2) { animation-delay: 0.1s; }
+                  .artifact-card:nth-child(3) { animation-delay: 0.15s; }
+                  .artifact-card:nth-child(4) { animation-delay: 0.2s; }
+                  .artifact-card:nth-child(5) { animation-delay: 0.25s; }
+                  .artifact-card:nth-child(6) { animation-delay: 0.3s; }
+
+                  @keyframes fadeInScale {
+                      from {
+                          opacity: 0;
+                          transform: scale(0.8);
+                      }
+                      to {
+                          opacity: 1;
+                          transform: scale(1);
+                      }
+                  }
+              }
+
+/* ============================================
+                 RESPONSIVE ADJUSTMENTS
+                 ============================================ */
+
+@media (max-width: 400px) {
+                  .title {
+                      font-size: 48px;
+                      margin-top: 60px;
+                  }
+                  .button {
+                      font-size: 20px;
+                      padding: var(--space-sm) var(--space-md);
+                  }
+                  .question-text {
+                      font-size: 20px;
+                  }
+                  .answer-button {
+                      font-size: 18px;
+                  }
+                  .collection-grid {
+                      gap: var(--space-xs);
+                  }
+              }
+
+/* ============================================
+                 UTILITY CLASSES
+                 ============================================ */
+
+.text-center { text-align: center; }
+
+.font-bold { font-weight: 700; }
+
+.mb-sm { margin-bottom: var(--space-sm); }
+
+.mb-md { margin-bottom: var(--space-md); }
+
+.mt-auto { margin-top: auto; }
+
+/* ============================================
+                 NEW GAME TYPES STYLES
+                 ============================================ */
+
+/* Memory Game Cards */
+.memory-card {
+  transition: all 0.3s ease;
+}
+
+.memory-card:active {
+  transform: scale(0.95);
+}
+
+/* Sorting Game */
+.sort-category {
+  transition: background 0.2s ease;
+}
+
+
+/* Picture Matching */
+#picture-matching-game button {
+  transition: all 0.3s ease;
+}
+
+#picture-matching-game button:active {
+  transform: scale(0.95);
+}</style>
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="edit-indicator" class="edit-indicator">EDIT MODE</div>
+
+      <!-- MAIN MENU SCREEN -->
+      <div id="name-entry" class="screen active">
+        <img class="background" id="name-entry-bg" alt="Background" />
+        <div class="content">
+          <div class="intro-content" style="max-width: 500px;">
+            <div class="intro-title" style="font-size: 42px; margin-bottom: 24px;">Welcome, Explorer! 👋</div>
+            <div class="intro-text" style="font-size: 18px; margin-bottom: 32px;">
+              Before we begin our archaeological adventure, what's your name?
+            </div>
+            <input 
+              type="text" 
+              id="player-name-input" 
+              placeholder="Enter your name..." 
+              style="
+                width: 100%;
+                padding: 16px;
+                font-size: 18px;
+                border: 3px solid var(--color-primary);
+                border-radius: 16px;
+                margin-bottom: 24px;
+                font-family: 'Poppins', sans-serif;
+                text-align: center;
+              "
+              maxlength="20"
+            />
+            <button class="button" onclick="submitPlayerName()">Let's Go! 🚀</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="main-menu" class="screen">
+        <img class="background" id="main-menu-bg" alt="Background" />
+        <div class="content">
+          <div class="title">Artifact Quest:<br />Moroccan Explorer</div>
+          <div class="menu-buttons">
+            <button class="button" onclick="startAdventure()">Start Adventure</button>
+            <button class="button secondary" onclick="showCollection()">My Collection</button>
+            <button class="button secondary" onclick="showHowToPlay()">How to Play</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ROADMAP SCREEN -->
+      <div id="roadmap" class="screen">
+        <img class="background" id="roadmap-bg" alt="Background" />
+        <div class="content">
+          <div class="roadmap-title">🗺️ Archaeological Sites</div>
+          <div class="roadmap-content" id="roadmap-content"></div>
+        </div>
+        <div class="bottom-nav" id="roadmap-nav">
+          <button class="nav-button" onclick="showScreen('main-menu')">
+            <span class="nav-button-icon">←</span>
+            <span>Back</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SITE INTRODUCTION SCREEN -->
+      <div id="site-intro" class="screen">
+        <img class="background" id="question-bg-intro" alt="Background" />
+        <div class="content">
+          <div class="intro-content">
+            <img class="intro-icon" id="intro-icon" alt="Site" />
+            <div class="intro-title" id="intro-title"></div>
+            <div class="intro-text" id="intro-text"></div>
+            <button class="button" onclick="startSiteQuestions()">Let's Explore!</button>
+          </div>
+        </div>
+        <div class="bottom-nav" id="intro-nav">
+          <button class="nav-button" onclick="showScreen('roadmap')">
+            <span class="nav-button-icon">←</span>
+            <span>Back to Map</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- QUESTION SCREEN -->
+      <div id="question" class="screen">
+        <img class="background" id="question-bg" alt="Background" />
+        <div class="content">
+          <div class="question-content">
+            <div class="progress-bar" id="progress-bar"></div>
+            <div class="question-box">
+              <div class="question-text" id="question-text"></div>
+            </div>
+            <div class="answers-container" id="answers-container"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEEDBACK SCREEN -->
+      <div id="feedback" class="screen">
+        <img class="background" id="question-bg-feedback" alt="Background" />
+        <div class="content">
+          <div class="feedback-content">
+            <img
+              class="celebration-overlay"
+              id="celebration-img"
+              alt="Celebration"
+              style="display: none;"
+            />
+            <img class="feedback-icon" id="feedback-icon" alt="Result" />
+            <div class="feedback-title" id="feedback-title"></div>
+            <div class="feedback-text" id="feedback-text"></div>
+            <button class="button" onclick="continueFromFeedback()">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SITE COMPLETION SCREEN -->
+
+
+      <div id="site-completion" class="screen">
+        <img class="background" id="question-bg-completion" alt="Background" />
+        <div class="content">
+          <div class="completion-content">
+            <div class="completion-title">🎉 Site Complete!</div>
+            <div class="completion-text" id="completion-text"></div>
+            <div class="artifact-rewards" id="artifact-rewards"></div>
+            <button class="button" onclick="returnToRoadmap()">Return to Map</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLLECTION SCREEN -->
+      <div id="collection" class="screen">
+        <img class="background" id="collection-bg" alt="Background" />
+        <div class="collection-content">
+          <div class="collection-title">📚 My Artifact Collection</div>
+          <div class="collection-grid" id="collection-grid"></div>
+        </div>
+        <div class="bottom-nav" id="collection-nav">
+          <button class="nav-button" onclick="showScreen('main-menu')">
+            <span class="nav-button-icon">←</span>
+            <span>Back to Menu</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ARTIFACT DETAIL MODAL -->
+      <div id="artifact-modal" class="modal-overlay" onclick="handleModalBackdropClick(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+          <img class="modal-artifact-image" id="modal-artifact-image" alt="Artifact" />
+          <div class="modal-artifact-name" id="modal-artifact-name"></div>
+          <div class="modal-artifact-authenticity" id="modal-artifact-authenticity"></div>
+          <div class="modal-artifact-info" id="modal-artifact-description"></div>
+          <div class="modal-artifact-info" id="modal-artifact-location"></div>
+          <div class="modal-artifact-info" id="modal-artifact-age"></div>
+          <div class="modal-artifact-info" id="modal-artifact-authenticity-info"></div>
+          <button class="modal-close" onclick="closeArtifactModal()">Close</button>
+        </div>
+      </div>
+
+      <!-- HOW TO PLAY OVERLAY -->
+      <div id="how-to-play" class="overlay" onclick="handleOverlayBackdropClick(event)">
+        <div class="overlay-content" onclick="event.stopPropagation()">
+          <div class="overlay-title">How to Play</div>
+          <div class="overlay-text"><strong>Welcome, Young Archaeologist!</strong></div>
+          <div class="overlay-text">
+            🗺️ Explore archaeological sites across Morocco by tapping on them.
+          </div>
+          <div class="overlay-text">
+            ❓ Answer questions about archaeology to learn new vocabulary and correct common
+            misconceptions.
+          </div>
+          <div class="overlay-text">
+            ⭐ Earn stars for correct answers. Collect enough stars to unlock new sites!
+          </div>
+          <div class="overlay-text">
+            🏺 Complete sites to earn beautiful artifact cards for your collection.
+          </div>
+          <div class="overlay-text">
+            📚 Learn about real Moroccan discoveries, including the oldest human skull ever found!
+          </div>
+          <div class="overlay-text"><strong>Have fun exploring!</strong></div>
+          <button class="overlay-close" onclick="closeHowToPlay()">Got It!</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      /* ==================================================
+       * GAME OVERVIEW: Educational archaeology game where children explore Moroccan archaeological sites,
+       * answer questions about archaeology vocabulary and concepts, collect artifact cards, and learn
+       * about important discoveries like the Jebel Irhoud skull. Features true/false and multiple choice
+       * questions with educational feedback. Edit mode allows customization of questions, sites, and artifacts.
+       *
+       * GAME STATE SHAPE: window.gameConfig = {
+       *   sites: [{ id, name, description, iconAssetId, introText, unlockStars, questions: [...], rewards: [...] }],
+       *   artifacts: [{ id, name, description, location, age, imageAssetId }],
+       *   settings: { attemptsPerQuestion, musicEnabled, colorScheme }
+       * }
+       *
+       * Runtime state: currentSite, currentQuestionIndex, earnedStars, collectedArtifacts, currentMode
+       * ==================================================
+       */
+
+      // Asset cache
+      const assetCache = {};
+
+      // Audio context and buffers
+      let audioContext = null;
+      let audioBuffers = {};
+      let backgroundMusicSource = null;
+
+      // Runtime state
+      let currentMode = 'play';
+      let currentScreen = 'name-entry';
+      let currentSite = null;
+      let currentQuestionIndex = 0;
+      let earnedStars = 0;
+      let collectedArtifacts = [];
+      let lastAnswerCorrect = false;
+      let playerName = '';
+
+      // Archaeologist character messages
+      const archaeologistMessages = {
+        correct: [
+          "Fantastic work, {name}! You're a future archaeologist! 🎉",
+          "{name}, you're a natural explorer! Keep it up! 🌟",
+          "Excellent, {name}! You're learning so much! 📚",
+          "Amazing, {name}! You're on your way to becoming a real archaeologist! 🔍",
+          "Brilliant answer, {name}! I'm so proud of you! ⭐",
+          "{name}, you've got the archaeologist spirit! 💪",
+          "Perfect, {name}! You're discovering the secrets of history! 🏺",
+          "Wonderful, {name}! You're a true scholar! 📖"
+        ],
+        siteComplete: [
+          "{name}, you did it! You're an amazing explorer! 🎊",
+          "Incredible work, {name}! You've mastered this site! 🏆",
+          "{name}, you're a true archaeologist now! 🔬",
+          "Fantastic, {name}! You've unlocked the secrets of this place! 🗝️",
+          "{name}, you're unstoppable! What an explorer! 🚀"
+        ],
+        encouragement: [
+          "Don't give up, {name}! Try again! 💪",
+          "That's okay, {name}! Every archaeologist learns from mistakes! 📚",
+          "Close, {name}! You're getting closer! 🎯",
+          "Keep exploring, {name}! You'll get it! 🔍"
+        ]
+      };
+
+      function getRandomMessage(messageType, name = '') {
+        const messages = archaeologistMessages[messageType];
+        let message = messages[Math.floor(Math.random() * messages.length)];
+        return message.replace('{name}', name);
+      }
+
+      // Preload all assets
+      function preloadAssets() {
+        const assetIds = [
+          'main_menu_background',
+          'roadmap_background',
+          'jebel_irhoud_site_icon',
+          'volubilis_site_icon',
+          'chellah_site_icon',
+          'artifact_card_jebel_irhoud_skull',
+          'artifact_card_stone_tool',
+          'artifact_card_roman_mosaic',
+          'artifact_card_oil_lamp',
+          'artifact_card_ceramic_bowl',
+          'artifact_card_ancient_coin',
+          'tool_brush',
+          'tool_measuring_tape',
+          'tool_magnifying_glass',
+          'tool_hammer',
+          'tool_shovel',
+          'wrong_answer_dinosaur_egg',
+          'wrong_answer_treasure_chest',
+          'star_icon',
+          'lock_icon',
+          'correct_answer_celebration',
+          'question_background',
+          'collection_book_background',
+        ];
+
+        const audioIds = [
+          'background_music_main',
+          'sfx_correct_answer',
+          'sfx_incorrect_answer',
+          'sfx_button_click',
+          'sfx_star_earned',
+          'sfx_site_unlock',
+          'sfx_card_collect',
+        ];
+
+        // Load images
+        let loadedImages = 0;
+        assetIds.forEach((id) => {
+          const assetInfo = lib.getAsset(id);
+          if (assetInfo) {
+            const img = new Image();
+            img.onload = () => {
+              loadedImages++;
+              lib.log('Image loaded: ' + id + ' (' + loadedImages + '/' + assetIds.length + ')');
+              if (loadedImages === assetIds.length) {
+                lib.log('All images loaded successfully');
+              }
+            };
+            img.onerror = () => {
+              loadedImages++;
+              lib.log('Error loading image: ' + id);
+              if (loadedImages === assetIds.length) {
+                lib.log('Image loading complete (with errors)');
+              }
+            };
+            img.src = assetInfo.url;
+            assetCache[id] = { img, info: assetInfo };
+          } else {
+            lib.log('Asset not found: ' + id);
+          }
+        });
+
+        // Initialize audio context and load audio
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        audioIds.forEach((id) => {
+          const assetInfo = lib.getAsset(id);
+          if (assetInfo) {
+            fetch(assetInfo.url)
+              .then((response) => response.arrayBuffer())
+              .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
+              .then((audioBuffer) => {
+                audioBuffers[id] = audioBuffer;
+                lib.log(`Audio loaded: ${id}`);
+              })
+              .catch((err) => lib.log(`Error loading audio ${id}: ${err}`));
+          }
+        });
+      }
+
+      // Play sound effect
+      function playSFX(id) {
+        if (!audioContext || !audioBuffers[id]) return;
+
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffers[id];
+        source.connect(audioContext.destination);
+        source.start(0);
+      }
+
+      // Play background music
+      function playBackgroundMusic() {
+        if (
+          !audioContext ||
+          !audioBuffers['background_music_main'] ||
+          !window.gameConfig.settings.musicEnabled
+        )
+          return;
+
+        // Stop existing music
+        if (backgroundMusicSource) {
+          backgroundMusicSource.stop();
+        }
+
+        backgroundMusicSource = audioContext.createBufferSource();
+        backgroundMusicSource.buffer = audioBuffers['background_music_main'];
+        backgroundMusicSource.loop = true;
+        backgroundMusicSource.connect(audioContext.destination);
+        backgroundMusicSource.start(0);
+      }
+
+      // Stop background music
+      function stopBackgroundMusic() {
+        if (backgroundMusicSource) {
+          backgroundMusicSource.stop();
+          backgroundMusicSource = null;
+        }
+      }
+
+      // Get asset image element
+      function getAssetImage(id) {
+        if (assetCache[id] && assetCache[id].img && assetCache[id].img.src) {
+          return assetCache[id].img;
+        }
+        lib.log('Warning: Asset not found or not loaded: ' + id);
+        return null;
+      }
+
+      // UI: Show/hide bottom navigation
+      function updateBottomNav(screenName) {
+        // Hide all nav bars
+        document.querySelectorAll('.bottom-nav').forEach((nav) => {
+          nav.classList.remove('visible');
+        });
+
+        // Show appropriate nav bar
+        const navMap = {
+          roadmap: 'roadmap-nav',
+          'site-intro': 'intro-nav',
+          collection: 'collection-nav',
+        };
+
+        const navId = navMap[screenName];
+        if (navId) {
+          setTimeout(() => {
+            document.getElementById(navId).classList.add('visible');
+          }, 100);
+        }
+      }
+
+      // Show screen with transition
+      function showScreen(screenName) {
+        playSFX('sfx_button_click');
+
+        // Fade out current screen
+        const currentScreenEl = document.querySelector('.screen.active');
+        if (currentScreenEl) {
+          currentScreenEl.style.opacity = '0';
+          setTimeout(() => {
+            currentScreenEl.classList.remove('active');
+          }, 300);
+        }
+
+        // Fade in new screen
+        setTimeout(() => {
+          const screen = document.getElementById(screenName);
+          if (screen) {
+            screen.classList.add('active');
+            currentScreen = screenName;
+            updateBottomNav(screenName);
+            setTimeout(() => {
+              screen.style.opacity = '1';
+            }, 50);
+          }
+        }, 300);
+      }
+
+      // Initialize game
+      function initGame() {
+        // Set background images with null checks
+        const setBackgroundImage = (elementId, assetId) => {
+          const img = getAssetImage(assetId);
+          if (img && img.src) {
+            document.getElementById(elementId).src = img.src;
+          } else {
+            lib.log('Warning: Could not load background image for ' + elementId);
+          }
+        };
+
+        setBackgroundImage('name-entry-bg', 'main_menu_background');
+        setBackgroundImage('main-menu-bg', 'main_menu_background');
+        setBackgroundImage('roadmap-bg', 'roadmap_background');
+        setBackgroundImage('question-bg-intro', 'question_background');
+        setBackgroundImage('question-bg', 'question_background');
+        setBackgroundImage('question-bg-feedback', 'question_background');
+        setBackgroundImage('question-bg-completion', 'question_background');
+        setBackgroundImage('collection-bg', 'collection_book_background');
+
+        // Initialize collected artifacts - START WITH FIRST SITE'S ARTIFACTS FOR DEMO
+        collectedArtifacts = [];
+
+        // Always add artifacts from the first site to show collection immediately
+        if (window.gameConfig.sites.length > 0 && window.gameConfig.sites[0].rewards) {
+          window.gameConfig.sites[0].rewards.forEach((artifactId) => {
+            if (!collectedArtifacts.includes(artifactId)) {
+              collectedArtifacts.push(artifactId);
+            }
+          });
+        }
+
+        // Add artifacts from any completed sites
+        window.gameConfig.sites.forEach((site) => {
+          if (site.completed && site.rewards) {
+            site.rewards.forEach((artifactId) => {
+              if (!collectedArtifacts.includes(artifactId)) {
+                collectedArtifacts.push(artifactId);
+              }
+            });
+          }
+        });
+
+        // Calculate total earned stars from completed sites
+        earnedStars = 0;
+        window.gameConfig.sites.forEach((site) => {
+          if (site.completed) {
+            earnedStars += site.questions.length;
+          }
+        });
+
+        lib.log('Game initialized');
+        lib.log('Collected artifacts: ' + collectedArtifacts.length);
+        lib.log('Artifact IDs: ' + collectedArtifacts.join(', '));
+
+        // Start background music
+        if (window.gameConfig.settings.musicEnabled) {
+          playBackgroundMusic();
+        }
+
+        // Show edit indicator if in edit mode
+        if (currentMode === 'edit') {
+          document.getElementById('edit-indicator').classList.add('active');
+        }
+
+        // Focus on name input
+        setTimeout(() => {
+          const nameInput = document.getElementById('player-name-input');
+          if (nameInput) {
+            nameInput.focus();
+          }
+        }, 100);
+      }
+
+      // Main menu functions
+      function submitPlayerName() {
+        const nameInput = document.getElementById('player-name-input');
+        const name = nameInput.value.trim();
+        
+        if (name.length === 0) {
+          nameInput.style.borderColor = 'var(--color-error)';
+          nameInput.placeholder = 'Please enter your name!';
+          return;
+        }
+        
+        playerName = name;
+        playSFX('sfx_button_click');
+        showScreen('main-menu');
+      }
+
+      function startAdventure() {
+        showScreen('roadmap');
+        renderRoadmap();
+      }
+
+      function showCollection() {
+        showScreen('collection');
+        renderCollection();
+      }
+
+      function showHowToPlay() {
+        playSFX('sfx_button_click');
+        document.getElementById('how-to-play').classList.add('active');
+      }
+
+      function closeHowToPlay() {
+        playSFX('sfx_button_click');
+        document.getElementById('how-to-play').classList.remove('active');
+      }
+
+      // Handle overlay backdrop clicks
+      function handleOverlayBackdropClick(event) {
+        if (event.target.classList.contains('overlay')) {
+          closeHowToPlay();
+        }
+      }
+
+      function handleModalBackdropClick(event) {
+        if (event.target.classList.contains('modal-overlay')) {
+          closeArtifactModal();
+        }
+      }
+
+      // Roadmap functions
+      function renderRoadmap() {
+        const container = document.getElementById('roadmap-content');
+        container.innerHTML = '';
+
+        window.gameConfig.sites.forEach((site, index) => {
+          const marker = document.createElement('div');
+          marker.className = 'site-marker';
+
+          const isUnlocked = earnedStars >= site.unlockStars;
+          if (!isUnlocked) {
+            marker.classList.add('locked');
+          }
+
+          const iconContainer = document.createElement('div');
+          iconContainer.className = 'site-icon-container';
+
+          const icon = document.createElement('img');
+          icon.className = 'site-icon';
+          icon.src = getAssetImage(site.iconAssetId).src;
+          icon.alt = site.name;
+          iconContainer.appendChild(icon);
+
+          if (!isUnlocked) {
+            const lockOverlay = document.createElement('div');
+            lockOverlay.className = 'lock-overlay';
+            const lockIcon = document.createElement('img');
+            lockIcon.className = 'lock-icon';
+            lockIcon.src = getAssetImage('lock_icon').src;
+            lockOverlay.appendChild(lockIcon);
+            iconContainer.appendChild(lockOverlay);
+          }
+
+          marker.appendChild(iconContainer);
+
+          const name = document.createElement('div');
+          name.className = 'site-name';
+          name.textContent = site.name;
+          marker.appendChild(name);
+
+          const stars = document.createElement('div');
+          stars.className = 'site-stars';
+          if (site.completed) {
+            stars.innerHTML = `<span>⭐</span><span>${site.questions.length}/${site.questions.length}</span>`;
+          } else {
+            stars.innerHTML = `<span>⭐</span><span>0/${site.questions.length}</span>`;
+          }
+          marker.appendChild(stars);
+
+          if (!isUnlocked) {
+            const requirement = document.createElement('div');
+            requirement.className = 'unlock-requirement';
+            requirement.textContent = `🔒 Requires ${site.unlockStars} stars`;
+            marker.appendChild(requirement);
+          }
+
+          marker.addEventListener('click', () => {
+            if (currentMode === 'edit') {
+              editSite(site);
+            } else if (isUnlocked) {
+              selectSite(site);
+            }
+          });
+
+          container.appendChild(marker);
+        });
+      }
+
+      function selectSite(site) {
+        playSFX('sfx_button_click');
+        currentSite = site;
+        currentQuestionIndex = 0;
+
+        // Show site introduction
+        document.getElementById('intro-icon').src = getAssetImage(site.iconAssetId).src;
+        document.getElementById('intro-title').textContent = site.name;
+        document.getElementById('intro-text').textContent = site.introText;
+
+        showScreen('site-intro');
+      }
+
+      function startSiteQuestions() {
+        playSFX('sfx_button_click');
+        showScreen('question');
+        renderQuestion();
+      }
+
+      // Question functions
+      function renderQuestion() {
+        const question = currentSite.questions[currentQuestionIndex];
+
+        // Render progress bar
+        const progressBar = document.getElementById('progress-bar');
+        progressBar.innerHTML = '';
+        for (let i = 0; i < currentSite.questions.length; i++) {
+          const star = document.createElement('img');
+          star.className = 'progress-star';
+          star.src = getAssetImage('star_icon').src;
+          if (i < currentQuestionIndex) {
+            star.classList.add('earned');
+          }
+          progressBar.appendChild(star);
+        }
+
+        // Render question text
+        document.getElementById('question-text').textContent = question.text;
+
+        // Render based on question type
+        const answersContainer = document.getElementById('answers-container');
+        answersContainer.innerHTML = '';
+
+        if (question.type === 'matching') {
+          renderMatchingGame(question, answersContainer);
+        } else if (question.type === 'memory') {
+          renderMemoryGame(question, answersContainer);
+        } else if (question.type === 'sorting') {
+          renderSortingGame(question, answersContainer);
+        } else if (question.type === 'picture_matching') {
+          renderPictureMatching(question, answersContainer);
+        } else {
+          // Default: true/false and multiple choice
+          question.answers.forEach((answer, index) => {
+            const button = document.createElement('button');
+            button.className = 'answer-button';
+
+            if (answer.imageAssetId) {
+              const img = document.createElement('img');
+              img.className = 'answer-image';
+              img.src = getAssetImage(answer.imageAssetId).src;
+              button.appendChild(img);
+            }
+
+            const text = document.createElement('span');
+            text.textContent = answer.text;
+            button.appendChild(text);
+
+            button.addEventListener('click', () => {
+              if (currentMode === 'edit') {
+                editQuestion(question);
+              } else {
+                checkAnswer(answer.isCorrect, question);
+              }
+            });
+
+            answersContainer.appendChild(button);
+          });
+        }
+      }
+
+      // Matching game: match terms to definitions
+      function renderMatchingGame(question, container) {
+        const matchingContainer = document.createElement('div');
+        matchingContainer.style.cssText = 'display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;';
+        
+        const leftColumn = document.createElement('div');
+        leftColumn.style.cssText = 'flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 12px;';
+        
+        const rightColumn = document.createElement('div');
+        rightColumn.style.cssText = 'flex: 1; min-width: 150px; display: flex; flex-direction: column; gap: 12px;';
+        
+        // Shuffle right column
+        const shuffledPairs = [...question.pairs].sort(() => Math.random() - 0.5);
+        
+        question.pairs.forEach((pair, index) => {
+          const leftBtn = document.createElement('button');
+          leftBtn.className = 'answer-button';
+          leftBtn.style.cssText = 'text-align: left; justify-content: flex-start; padding: 12px 16px; font-size: 16px; min-height: 60px;';
+          leftBtn.textContent = pair.term;
+          leftBtn.dataset.pairIndex = index;
+          leftBtn.dataset.isLeft = 'true';
+          leftColumn.appendChild(leftBtn);
+        });
+        
+        shuffledPairs.forEach((pair, index) => {
+          const rightBtn = document.createElement('button');
+          rightBtn.className = 'answer-button';
+          rightBtn.style.cssText = 'text-align: left; justify-content: flex-start; padding: 12px 16px; font-size: 16px; min-height: 60px;';
+          rightBtn.textContent = pair.definition;
+          rightBtn.dataset.correctIndex = question.pairs.indexOf(pair);
+          rightBtn.dataset.isLeft = 'false';
+          rightColumn.appendChild(rightBtn);
+        });
+        
+        matchingContainer.appendChild(leftColumn);
+        matchingContainer.appendChild(rightColumn);
+        container.appendChild(matchingContainer);
+        
+        // Add submit button
+        const submitBtn = document.createElement('button');
+        submitBtn.className = 'button';
+        submitBtn.textContent = 'Check Matches';
+        submitBtn.style.marginTop = '24px';
+        submitBtn.addEventListener('click', () => {
+          checkMatchingAnswer(question);
+        });
+        container.appendChild(submitBtn);
+      }
+
+      // Memory game: flip cards to find matches
+      function renderMemoryGame(question, container) {
+        const gameContainer = document.createElement('div');
+        gameContainer.style.cssText = 'display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; max-width: 400px; margin: 0 auto;';
+        gameContainer.id = 'memory-game';
+        
+        const cards = [];
+        question.pairs.forEach((pair, index) => {
+          cards.push({ id: index, type: 'term', text: pair.term });
+          cards.push({ id: index, type: 'definition', text: pair.definition });
+        });
+        
+        // Shuffle cards
+        cards.sort(() => Math.random() - 0.5);
+        
+        cards.forEach((card, index) => {
+          const cardEl = document.createElement('button');
+          cardEl.className = 'memory-card';
+          cardEl.style.cssText = `
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-hover) 100%);
+            border: 3px solid white;
+            border-radius: 12px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 8px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+          `;
+          cardEl.textContent = '?';
+          cardEl.dataset.cardIndex = index;
+          cardEl.dataset.pairId = card.id;
+          cardEl.dataset.cardType = card.type;
+          cardEl.dataset.cardText = card.text;
+          cardEl.dataset.flipped = 'false';
+          
+          cardEl.addEventListener('click', () => {
+            flipMemoryCard(cardEl, question);
+          });
+          
+          gameContainer.appendChild(cardEl);
+        });
+        
+        container.appendChild(gameContainer);
+      }
+
+      let memoryFlipped = [];
+      function flipMemoryCard(cardEl, question) {
+        if (cardEl.dataset.flipped === 'true' || memoryFlipped.length >= 2) return;
+        
+        cardEl.dataset.flipped = 'true';
+        cardEl.textContent = cardEl.dataset.cardText;
+        cardEl.style.background = 'linear-gradient(135deg, var(--color-success) 0%, #229954 100%)';
+        memoryFlipped.push(cardEl);
+        
+        if (memoryFlipped.length === 2) {
+          setTimeout(() => {
+            const [card1, card2] = memoryFlipped;
+            const match = card1.dataset.pairId === card2.dataset.pairId && card1.dataset.cardType !== card2.dataset.cardType;
+            
+            if (!match) {
+              card1.dataset.flipped = 'false';
+              card2.dataset.flipped = 'false';
+              card1.textContent = '?';
+              card2.textContent = '?';
+              card1.style.background = 'linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-hover) 100%)';
+              card2.style.background = 'linear-gradient(135deg, var(--color-secondary) 0%, var(--color-secondary-hover) 100%)';
+            }
+            
+            memoryFlipped = [];
+            
+            // Check if all matched
+            const allFlipped = document.querySelectorAll('#memory-game .memory-card[data-flipped="true"]');
+            if (allFlipped.length === question.pairs.length * 2) {
+              setTimeout(() => {
+                checkAnswer(true, question);
+              }, 500);
+            }
+          }, 800);
+        }
+      }
+
+      // Sorting game: categorize items
+      function renderSortingGame(question, container) {
+        const sortingContainer = document.createElement('div');
+        sortingContainer.style.cssText = 'display: flex; flex-direction: column; gap: 20px;';
+        
+        // Create category boxes
+        const categoriesDiv = document.createElement('div');
+        categoriesDiv.style.cssText = 'display: flex; flex-direction: column; gap: 16px;';
+        
+        question.categories.forEach((category, catIndex) => {
+          const categoryBox = document.createElement('div');
+          categoryBox.style.cssText = `
+            background: rgba(255, 255, 255, 0.95);
+            border: 3px solid var(--color-primary);
+            border-radius: 16px;
+            padding: 16px;
+            min-height: 100px;
+          `;
+          
+          const categoryTitle = document.createElement('div');
+          categoryTitle.style.cssText = 'font-weight: 700; font-size: 18px; color: var(--color-primary); margin-bottom: 12px;';
+          categoryTitle.textContent = category.name;
+          categoryBox.appendChild(categoryTitle);
+          
+          const itemsDiv = document.createElement('div');
+          itemsDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 8px; min-height: 40px;';
+          itemsDiv.className = 'sort-category';
+          itemsDiv.dataset.categoryIndex = catIndex;
+          categoryBox.appendChild(itemsDiv);
+          
+          categoriesDiv.appendChild(categoryBox);
+        });
+        
+        sortingContainer.appendChild(categoriesDiv);
+        
+        // Create items to sort
+        const itemsDiv = document.createElement('div');
+        itemsDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 20px;';
+        
+        question.items.forEach((item, itemIndex) => {
+          const itemBtn = document.createElement('button');
+          itemBtn.className = 'answer-button';
+          itemBtn.style.cssText = 'flex: 0 1 auto; padding: 12px 16px; font-size: 16px; min-height: 50px;';
+          itemBtn.textContent = item.text;
+          itemBtn.dataset.itemIndex = itemIndex;
+          itemBtn.dataset.correctCategory = item.categoryIndex;
+          itemBtn.draggable = true;
+          
+          itemBtn.addEventListener('dragstart', (e) => {
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('itemIndex', itemIndex);
+          });
+          
+          itemsDiv.appendChild(itemBtn);
+        });
+        
+        sortingContainer.appendChild(itemsDiv);
+        
+        // Add drag and drop to categories
+        document.querySelectorAll('.sort-category').forEach(cat => {
+          cat.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            cat.style.background = 'rgba(52, 152, 219, 0.1)';
+          });
+          
+          cat.addEventListener('dragleave', () => {
+            cat.style.background = '';
+          });
+          
+          cat.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const itemIndex = parseInt(e.dataTransfer.getData('itemIndex'));
+            const categoryIndex = parseInt(cat.dataset.categoryIndex);
+            const item = question.items[itemIndex];
+            
+            const itemBtn = document.querySelector(`[data-item-index="${itemIndex}"]`);
+            if (itemBtn) {
+              itemBtn.style.display = 'none';
+              const badge = document.createElement('span');
+              badge.style.cssText = 'background: var(--color-secondary); color: white; padding: 8px 12px; border-radius: 12px; font-weight: 600; font-size: 14px;';
+              badge.textContent = item.text;
+              badge.dataset.itemIndex = itemIndex;
+              cat.appendChild(badge);
+            }
+            
+            // Check if all sorted
+            const allSorted = document.querySelectorAll('.sort-category span').length === question.items.length;
+            if (allSorted) {
+              checkSortingAnswer(question);
+            }
+          });
+        });
+        
+        container.appendChild(sortingContainer);
+      }
+
+      // Picture matching: find matching pairs
+      function renderPictureMatching(question, container) {
+        const gameContainer = document.createElement('div');
+        gameContainer.style.cssText = 'display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 450px; margin: 0 auto;';
+        gameContainer.id = 'picture-matching-game';
+        
+        const cards = [];
+        question.pairs.forEach((pair, index) => {
+          cards.push({ id: index, assetId: pair.imageAssetId1 });
+          cards.push({ id: index, assetId: pair.imageAssetId2 });
+        });
+        
+        cards.sort(() => Math.random() - 0.5);
+        
+        cards.forEach((card, index) => {
+          const cardEl = document.createElement('button');
+          cardEl.style.cssText = `
+            aspect-ratio: 1;
+            background: white;
+            border: 3px solid var(--color-secondary);
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+          `;
+          cardEl.dataset.cardIndex = index;
+          cardEl.dataset.pairId = card.id;
+          cardEl.dataset.assetId = card.assetId;
+          cardEl.dataset.matched = 'false';
+          
+          const img = document.createElement('img');
+          img.style.cssText = 'max-width: 100%; max-height: 100%; object-fit: contain;';
+          const assetImg = getAssetImage(card.assetId);
+          if (assetImg) {
+            img.src = assetImg.src;
+          }
+          cardEl.appendChild(img);
+          
+          cardEl.addEventListener('click', () => {
+            flipPictureCard(cardEl, question);
+          });
+          
+          gameContainer.appendChild(cardEl);
+        });
+        
+        container.appendChild(gameContainer);
+      }
+
+      let pictureFlipped = [];
+      function flipPictureCard(cardEl, question) {
+        if (cardEl.dataset.matched === 'true' || pictureFlipped.length >= 2) return;
+        
+        cardEl.style.borderColor = 'var(--color-success)';
+        cardEl.style.background = 'rgba(39, 174, 96, 0.1)';
+        pictureFlipped.push(cardEl);
+        
+        if (pictureFlipped.length === 2) {
+          setTimeout(() => {
+            const [card1, card2] = pictureFlipped;
+            const match = card1.dataset.pairId === card2.dataset.pairId;
+            
+            if (match) {
+              card1.dataset.matched = 'true';
+              card2.dataset.matched = 'true';
+              card1.style.opacity = '0.6';
+              card2.style.opacity = '0.6';
+            } else {
+              card1.style.borderColor = 'var(--color-secondary)';
+              card2.style.borderColor = 'var(--color-secondary)';
+              card1.style.background = 'white';
+              card2.style.background = 'white';
+            }
+            
+            pictureFlipped = [];
+            
+            // Check if all matched
+            const allMatched = document.querySelectorAll('#picture-matching-game button[data-matched="true"]');
+            if (allMatched.length === question.pairs.length * 2) {
+              setTimeout(() => {
+                checkAnswer(true, question);
+              }, 500);
+            }
+          }, 800);
+        }
+      }
+
+      // Check answers for new game types
+      function checkMatchingAnswer(question) {
+        // Verify all matches are correct
+        let allCorrect = true;
+        // Implementation would check selected matches
+        checkAnswer(allCorrect, question);
+      }
+
+      function checkSortingAnswer(question) {
+        let allCorrect = true;
+        document.querySelectorAll('.sort-category').forEach((cat, catIndex) => {
+          const items = cat.querySelectorAll('span[data-item-index]');
+          items.forEach(item => {
+            const itemIndex = parseInt(item.dataset.itemIndex);
+            if (question.items[itemIndex].categoryIndex !== catIndex) {
+              allCorrect = false;
+            }
+          });
+        });
+        checkAnswer(allCorrect, question);
+      }
+
+      function checkAnswer(isCorrect, question) {
+        playSFX(isCorrect ? 'sfx_correct_answer' : 'sfx_incorrect_answer');
+        lastAnswerCorrect = isCorrect;
+
+        // Show feedback
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackText = document.getElementById('feedback-text');
+        const celebrationImg = document.getElementById('celebration-img');
+
+        if (isCorrect) {
+          feedbackIcon.src = getAssetImage('star_icon').src;
+          feedbackIcon.style.opacity = '1';
+          feedbackTitle.textContent = 'Correct!';
+          feedbackTitle.className = 'feedback-title correct';
+          
+          // Get archaeologist message
+          const archaeologistMessage = getRandomMessage('correct', playerName);
+          feedbackText.innerHTML = `<strong>${archaeologistMessage}</strong><br><br>${question.correctFeedback}`;
+          
+          celebrationImg.src = getAssetImage('correct_answer_celebration').src;
+          celebrationImg.style.display = 'block';
+
+          // Award star
+          earnedStars++;
+          playSFX('sfx_star_earned');
+        } else {
+          feedbackIcon.src = getAssetImage('star_icon').src;
+          feedbackIcon.style.opacity = '0.3';
+          feedbackTitle.textContent = 'Not Quite...';
+          feedbackTitle.className = 'feedback-title incorrect';
+          
+          // Get encouragement message
+          const encouragementMessage = getRandomMessage('encouragement', playerName);
+          feedbackText.innerHTML = `<strong>${encouragementMessage}</strong><br><br>${question.incorrectFeedback}`;
+          
+          celebrationImg.style.display = 'none';
+        }
+
+        showScreen('feedback');
+      }
+
+      function continueFromFeedback() {
+        playSFX('sfx_button_click');
+
+        if (lastAnswerCorrect) {
+          currentQuestionIndex++;
+
+          if (currentQuestionIndex >= currentSite.questions.length) {
+            // Site completed
+            completeSite();
+          } else {
+            // Next question
+            showScreen('question');
+            renderQuestion();
+          }
+        } else {
+          // Try again
+          showScreen('question');
+          renderQuestion();
+        }
+      }
+
+      function completeSite() {
+        // Mark site as completed and show completion screen
+        currentSite.completed = true;
+
+        // Collect artifacts - avoid duplicates
+        if (currentSite.rewards) {
+          currentSite.rewards.forEach((artifactId) => {
+            if (!collectedArtifacts.includes(artifactId)) {
+              collectedArtifacts.push(artifactId);
+            }
+          });
+        }
+
+        lib.log('Site completed. Total collected artifacts: ' + collectedArtifacts.length);
+
+        // Play collection sound
+        playSFX('sfx_card_collect');
+
+        // Check if next site should be unlocked
+        const nextSite = window.gameConfig.sites.find(
+          (s) => !s.completed && earnedStars >= s.unlockStars
+        );
+        if (nextSite) {
+          playSFX('sfx_site_unlock');
+        }
+
+        // Show completion screen
+        const archaeologistMessage = getRandomMessage('siteComplete', playerName);
+        const completionText = document.getElementById('completion-text');
+        completionText.innerHTML = `<strong>${archaeologistMessage}</strong><br><br>You've earned ${currentSite.questions.length} stars and discovered ${currentSite.rewards.length} new artifacts!`;
+
+        const rewardsContainer = document.getElementById('artifact-rewards');
+        rewardsContainer.innerHTML = '';
+
+        if (currentSite.rewards) {
+          currentSite.rewards.forEach((artifactId) => {
+            const artifact = window.gameConfig.artifacts.find((a) => a.id === artifactId);
+            if (artifact) {
+              const img = document.createElement('img');
+              img.className = 'artifact-preview';
+              const assetImg = getAssetImage(artifact.imageAssetId);
+              if (assetImg) {
+                img.src = assetImg.src;
+              }
+              rewardsContainer.appendChild(img);
+            }
+          });
+        }
+
+        showScreen('site-completion');
+      }
+
+      function returnToRoadmap() {
+        playSFX('sfx_button_click');
+        showScreen('roadmap');
+        renderRoadmap();
+      }
+
+      // Collection functions
+      function renderCollection() {
+        const grid = document.getElementById('collection-grid');
+        grid.innerHTML = '';
+
+        if (!window.gameConfig.artifacts || window.gameConfig.artifacts.length === 0) {
+          grid.innerHTML =
+            '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: white; font-size: 18px;">Complete sites to collect artifacts!</div>';
+          return;
+        }
+
+        lib.log('=== RENDERING COLLECTION ===');
+        lib.log('Total artifacts in config: ' + window.gameConfig.artifacts.length);
+        lib.log('Collected artifact IDs: ' + JSON.stringify(collectedArtifacts));
+
+        let collectedCount = 0;
+
+        window.gameConfig.artifacts.forEach((artifact, index) => {
+          const card = document.createElement('div');
+          card.className = 'artifact-card';
+
+          const isCollected = collectedArtifacts.includes(artifact.id);
+          
+          lib.log('Artifact ' + artifact.id + ' - Collected: ' + isCollected);
+
+          if (isCollected) {
+            collectedCount++;
+            card.style.borderColor = 'var(--color-primary)';
+            card.style.borderWidth = '3px';
+            card.style.backgroundColor = 'white';
+          } else {
+            card.classList.add('locked');
+            card.style.backgroundColor = '#E8E8E8';
+          }
+
+          // Image container
+          const imgContainer = document.createElement('div');
+          imgContainer.style.width = '110px';
+          imgContainer.style.height = '110px';
+          imgContainer.style.display = 'flex';
+          imgContainer.style.alignItems = 'center';
+          imgContainer.style.justifyContent = 'center';
+          imgContainer.style.marginBottom = 'var(--space-xs)';
+
+          const img = document.createElement('img');
+          img.className = 'artifact-card-image';
+          const assetImg = getAssetImage(artifact.imageAssetId);
+          if (assetImg) {
+            img.src = assetImg.src;
+            img.style.display = 'block';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            lib.log('Image loaded for ' + artifact.id);
+          } else {
+            img.style.background = '#ddd';
+            img.style.display = 'block';
+            img.style.width = '100%';
+            img.style.height = '100%';
+            lib.log('Warning: Asset not found for artifact ' + artifact.id);
+          }
+          imgContainer.appendChild(img);
+          card.appendChild(imgContainer);
+
+          // Name
+          const name = document.createElement('div');
+          name.className = 'artifact-card-name';
+          name.textContent = isCollected ? artifact.name : '???';
+          name.style.display = 'block';
+          name.style.minHeight = '40px';
+          name.style.display = 'flex';
+          name.style.alignItems = 'center';
+          name.style.justifyContent = 'center';
+          card.appendChild(name);
+
+          // Click handler
+          if (isCollected) {
+            card.style.cursor = 'pointer';
+            card.addEventListener('click', () => {
+              if (currentMode === 'edit') {
+                editArtifact(artifact);
+              } else {
+                showArtifactDetail(artifact);
+              }
+            });
+          } else {
+            card.style.cursor = 'default';
+          }
+
+          grid.appendChild(card);
+        });
+
+        lib.log('=== COLLECTION RENDER COMPLETE ===');
+        lib.log('Total collected: ' + collectedCount + ' / ' + window.gameConfig.artifacts.length);
+      }
+
+      function showArtifactDetail(artifact) {
+        playSFX('sfx_button_click');
+
+        lib.log('Showing artifact detail: ' + artifact.id);
+
+        // Set image
+        const assetImg = getAssetImage(artifact.imageAssetId);
+        if (assetImg) {
+          document.getElementById('modal-artifact-image').src = assetImg.src;
+        }
+
+        // Set name
+        document.getElementById('modal-artifact-name').textContent = artifact.name;
+
+        // Set authenticity badge
+        const authenticityEl = document.getElementById('modal-artifact-authenticity');
+        if (artifact.authentic) {
+          authenticityEl.className = 'modal-artifact-authenticity authentic';
+          authenticityEl.textContent = '✓ AUTHENTIC MOROCCAN ARTIFACT';
+        } else {
+          authenticityEl.className = 'modal-artifact-authenticity';
+          authenticityEl.textContent = 'Artifact Information';
+        }
+
+        // Build complete information in description field
+        let infoHTML = '';
+
+        if (artifact.description) {
+          infoHTML += '<strong>📖 Description:</strong><br>' + artifact.description + '<br><br>';
+        }
+
+        if (artifact.location) {
+          infoHTML += '<strong>📍 Location:</strong><br>' + artifact.location + '<br><br>';
+        }
+
+        if (artifact.age) {
+          infoHTML += '<strong>📅 Age:</strong><br>' + artifact.age + '<br><br>';
+        }
+
+        if (artifact.historicalContext) {
+          infoHTML +=
+            '<strong>📚 Historical Context:</strong><br>' + artifact.historicalContext + '<br><br>';
+        }
+
+        if (artifact.culturalSignificance) {
+          infoHTML +=
+            '<strong>🎨 Cultural Significance:</strong><br>' +
+            artifact.culturalSignificance +
+            '<br><br>';
+        }
+
+        if (artifact.museum) {
+          infoHTML += '<strong>🏛️ Museum:</strong><br>' + artifact.museum + '<br><br>';
+        }
+
+        if (artifact.authenticityInfo) {
+          infoHTML += '<strong>✓ Verification:</strong><br>' + artifact.authenticityInfo;
+        }
+
+        // Display all content in the description field
+        const descriptionEl = document.getElementById('modal-artifact-description');
+        descriptionEl.innerHTML = infoHTML;
+        descriptionEl.style.display = 'block';
+
+        // Hide other info fields
+        document.getElementById('modal-artifact-location').style.display = 'none';
+        document.getElementById('modal-artifact-age').style.display = 'none';
+        document.getElementById('modal-artifact-authenticity-info').style.display = 'none';
+
+        // Show modal
+        const modal = document.getElementById('artifact-modal');
+        modal.classList.add('active');
+        const modalContent = modal.querySelector('.modal-content');
+        if (modalContent) {
+          modalContent.scrollTop = 0;
+        }
+
+        lib.log('Artifact detail modal opened');
+      }
+
+      function closeArtifactModal() {
+        playSFX('sfx_button_click');
+        document.getElementById('artifact-modal').classList.remove('active');
+      }
+
+      // Edit mode functions
+      function editSite(site) {
+        lib.editMenu.open({
+          name: `Edit Site: ${site.name}`,
+          params: {
+            'Site Name': {
+              key: `gameConfig.sites.${window.gameConfig.sites.indexOf(site)}.name`,
+              type: 'string',
+              onChange: (value) => {
+                site.name = value;
+                renderRoadmap();
+              },
+            },
+            Description: {
+              key: `gameConfig.sites.${window.gameConfig.sites.indexOf(site)}.description`,
+              type: 'string',
+              onChange: (value) => {
+                site.description = value;
+              },
+            },
+            'Introduction Text': {
+              key: `gameConfig.sites.${window.gameConfig.sites.indexOf(site)}.introText`,
+              type: 'string',
+              onChange: (value) => {
+                site.introText = value;
+              },
+            },
+            'Stars to Unlock': {
+              key: `gameConfig.sites.${window.gameConfig.sites.indexOf(site)}.unlockStars`,
+              type: 'slider',
+              min: 0,
+              max: 20,
+              step: 1,
+              onChange: (value) => {
+                site.unlockStars = value;
+                renderRoadmap();
+              },
+            },
+          },
+        });
+      }
+
+      function editQuestion(question) {
+        const siteIndex = window.gameConfig.sites.indexOf(currentSite);
+        const questionIndex = currentSite.questions.indexOf(question);
+
+        lib.editMenu.open({
+          name: `Edit Question ${questionIndex + 1}`,
+          params: {
+            'Question Text': {
+              key: `gameConfig.sites.${siteIndex}.questions.${questionIndex}.text`,
+              type: 'string',
+              onChange: (value) => {
+                question.text = value;
+                renderQuestion();
+              },
+            },
+            'Question Type': {
+              key: `gameConfig.sites.${siteIndex}.questions.${questionIndex}.type`,
+              type: 'dropdown',
+              options: [
+                { label: 'True/False', value: 'true_false' },
+                { label: 'Multiple Choice', value: 'multiple_choice' },
+                { label: 'Matching', value: 'matching' },
+                { label: 'Memory Game', value: 'memory' },
+                { label: 'Picture Matching', value: 'picture_matching' },
+                { label: 'Sorting', value: 'sorting' },
+              ],
+              onChange: (value) => {
+                question.type = value;
+                renderQuestion();
+              },
+            },
+            'Correct Feedback': {
+              key: `gameConfig.sites.${siteIndex}.questions.${questionIndex}.correctFeedback`,
+              type: 'string',
+              onChange: (value) => {
+                question.correctFeedback = value;
+              },
+            },
+            'Incorrect Feedback': {
+              key: `gameConfig.sites.${siteIndex}.questions.${questionIndex}.incorrectFeedback`,
+              type: 'string',
+              onChange: (value) => {
+                question.incorrectFeedback = value;
+              },
+            },
+          },
+        });
+      }
+
+      function editArtifact(artifact) {
+        const artifactIndex = window.gameConfig.artifacts.indexOf(artifact);
+
+        lib.editMenu.open({
+          name: `Edit Artifact: ${artifact.name}`,
+          params: {
+            'Artifact Name': {
+              key: `gameConfig.artifacts.${artifactIndex}.name`,
+              type: 'string',
+              onChange: (value) => {
+                artifact.name = value;
+                renderCollection();
+              },
+            },
+            Description: {
+              key: `gameConfig.artifacts.${artifactIndex}.description`,
+              type: 'string',
+              onChange: (value) => {
+                artifact.description = value;
+              },
+            },
+            Location: {
+              key: `gameConfig.artifacts.${artifactIndex}.location`,
+              type: 'string',
+              onChange: (value) => {
+                artifact.location = value;
+              },
+            },
+            Age: {
+              key: `gameConfig.artifacts.${artifactIndex}.age`,
+              type: 'string',
+              onChange: (value) => {
+                artifact.age = value;
+              },
+            },
+            Authentic: {
+              key: `gameConfig.artifacts.${artifactIndex}.authentic`,
+              type: 'checkbox',
+              onChange: (value) => {
+                artifact.authentic = value;
+              },
+            },
+            'Authenticity Info': {
+              key: `gameConfig.artifacts.${artifactIndex}.authenticityInfo`,
+              type: 'string',
+              onChange: (value) => {
+                artifact.authenticityInfo = value;
+              },
+            },
+          },
+        });
+      }
+
+      // Main run function
+      function run(mode) {
+        lib.log('run() called. Mode: ' + mode);
+        currentMode = mode;
+
+        // Show game parameters UI
+        lib.showGameParameters({
+          name: 'Game Settings',
+          params: {
+            'Attempts Per Question': {
+              key: 'gameConfig.settings.attemptsPerQuestion',
+              type: 'slider',
+              min: 1,
+              max: 3,
+              step: 1,
+              onChange: (value) => {
+                window.gameConfig.settings.attemptsPerQuestion = value;
+              },
+            },
+            'Background Music': {
+              key: 'gameConfig.settings.musicEnabled',
+              type: 'checkbox',
+              onChange: (value) => {
+                window.gameConfig.settings.musicEnabled = value;
+                if (value) {
+                  playBackgroundMusic();
+                } else {
+                  stopBackgroundMusic();
+                }
+              },
+            },
+            'Color Scheme': {
+              key: 'gameConfig.settings.colorScheme',
+              type: 'dropdown',
+              options: [
+                { label: 'Warm (Default)', value: 'warm' },
+                { label: 'Cool', value: 'cool' },
+                { label: 'Neutral', value: 'neutral' },
+              ],
+              onChange: (value) => {
+                window.gameConfig.settings.colorScheme = value;
+              },
+            },
+          },
+        });
+
+        // Preload assets
+        preloadAssets();
+
+        // Wait longer for assets to load, then initialize
+        setTimeout(() => {
+          lib.log('Initializing game after asset preload');
+          initGame();
+        }, 1500);
+      }
+    </script>
+    
+    <!-- Load game configuration and assets -->
+    <script src="../asset_map/asset_map.js"></script>
+    <script>
+      // Load config
+      fetch('../config/config.json')
+        .then(r => r.json())
+        .then(data => {
+          window.gameConfig = data;
+          console.log('Config loaded successfully');
+          // Initialize after short delay for assets to load
+          setTimeout(() => {
+            run('play');
+          }, 500);
+        })
+        .catch(err => console.error('Error loading config:', err));
+
+      // Mock lib object
+      window.lib = {
+        getAsset: function(id) {
+          return window.assets ? window.assets[id] : null;
+        },
+        log: console.log,
+        editMenu: { open: function() {} },
+        showGameParameters: function() {}
+      };
+    </script>
+    
+  </body>
+</html>
